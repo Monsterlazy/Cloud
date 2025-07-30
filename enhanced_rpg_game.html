@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DreamBooks - MMORPG</title>
+    <title>DreamBooks RPG - Complete Enhanced Edition</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #0a0a0a, #1a1a2e, #16213e);
+            background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
             color: #fff;
             overflow: hidden;
             height: 100vh;
@@ -27,244 +27,352 @@
             display: flex;
         }
 
-        /* Loading Screen */
-        .loading-screen {
+        .game-world {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            background: #2d4a2d;
+        }
+
+        /* Enhanced Character Selection */
+        .character-selection {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #0a0a0a, #1a1a2e);
+            background: rgba(0, 0, 0, 0.95);
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 5000;
         }
 
-        .loading-title {
-            font-size: 48px;
-            color: #ff6b35;
-            margin-bottom: 30px;
-            text-shadow: 0 0 30px rgba(255, 107, 53, 0.8);
-            animation: titlePulse 2s ease-in-out infinite;
+        .character-panel {
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            border: 3px solid #d4af37;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 900px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.3);
         }
 
-        @keyframes titlePulse {
-            0%, 100% { transform: scale(1); text-shadow: 0 0 30px rgba(255, 107, 53, 0.8); }
-            50% { transform: scale(1.05); text-shadow: 0 0 50px rgba(255, 107, 53, 1); }
+        .character-title {
+            font-size: 32px;
+            color: #d4af37;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            animation: titleGlow 2s ease-in-out infinite;
         }
 
-        .loading-bar {
-            width: 400px;
-            height: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 2px solid #ff6b35;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 20px;
+        @keyframes titleGlow {
+            0%, 100% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); }
+            50% { text-shadow: 0 0 20px rgba(212, 175, 55, 0.8); }
         }
 
-        .loading-progress {
-            height: 100%;
-            background: linear-gradient(90deg, #ff6b35, #ffa500);
-            width: 0%;
-            transition: width 0.3s ease;
-            animation: progressGlow 2s ease-in-out infinite;
+        .class-selection {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 25px 0;
         }
 
-        @keyframes progressGlow {
-            0%, 100% { box-shadow: 0 0 10px rgba(255, 107, 53, 0.5); }
-            50% { box-shadow: 0 0 20px rgba(255, 165, 0, 0.8); }
-        }
-
-        /* Main Game World */
-        .game-world {
-            flex: 1;
+        .class-card {
+            background: linear-gradient(135deg, #333, #222);
+            border: 2px solid #555;
+            border-radius: 15px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            background: linear-gradient(45deg, #2d5016, #4a7c59, #2d5016);
         }
 
+        .class-card:hover {
+            border-color: #d4af37;
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+        }
+
+        .class-card.selected {
+            border-color: #4caf50;
+            background: linear-gradient(135deg, #4caf50, #388e3c);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .class-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .class-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #d4af37;
+        }
+
+        .start-game-btn {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            border: none;
+            color: white;
+            padding: 20px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .start-game-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.5);
+        }
+
+        .start-game-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Enhanced World Map */
         .world-map {
             position: absolute;
             width: 4000px;
             height: 3000px;
+            background: radial-gradient(circle at 50% 50%, #228b22 0%, #32cd32 20%, #6b8e23 40%, #8fbc8f 60%, #9acd32 80%, #228b22 100%);
             transition: transform 0.3s ease;
         }
 
-        /* Zone Definitions */
-        .zone {
+        .map-zone {
             position: absolute;
-            border: 3px solid rgba(255, 255, 255, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.4);
             border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 16px;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(3px);
+            transition: all 0.4s ease;
             cursor: pointer;
-            transition: all 0.3s ease;
         }
 
-        .zone:hover {
+        .map-zone:hover {
             transform: scale(1.05);
             border-color: rgba(255, 255, 255, 0.8);
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
         }
 
-        .zone-safe {
+        /* Safe Zone - Thảo Nguyên */
+        .zone-grassland {
             background: linear-gradient(135deg, rgba(50, 205, 50, 0.8), rgba(34, 139, 34, 0.6));
-            width: 600px;
+            width: 500px;
             height: 400px;
             top: 1200px;
-            left: 1700px;
+            left: 1750px;
+            border-color: #00ff00;
+            animation: safeZoneGlow 3s ease-in-out infinite;
         }
 
+        /* PvP Zones */
         .zone-ice {
             background: linear-gradient(135deg, rgba(173, 216, 230, 0.8), rgba(135, 206, 235, 0.6));
-            width: 500px;
-            height: 350px;
+            width: 600px;
+            height: 450px;
             top: 200px;
-            left: 500px;
+            left: 300px;
         }
 
         .zone-fire {
             background: linear-gradient(135deg, rgba(255, 69, 0, 0.8), rgba(255, 140, 0, 0.6));
-            width: 450px;
+            width: 550px;
             height: 400px;
-            top: 400px;
+            top: 300px;
             left: 2800px;
-            animation: fireGlow 2s ease-in-out infinite;
         }
 
-        .zone-cemetery {
-            background: linear-gradient(135deg, rgba(75, 0, 130, 0.8), rgba(139, 69, 19, 0.6));
-            width: 400px;
-            height: 300px;
+        .zone-graveyard {
+            background: linear-gradient(135deg, rgba(105, 105, 105, 0.8), rgba(169, 169, 169, 0.6));
+            width: 650px;
+            height: 500px;
             top: 1800px;
-            left: 800px;
+            left: 500px;
         }
 
-        /* Player Character */
-        .player {
+        .zone-forest {
+            background: linear-gradient(135deg, rgba(34, 139, 34, 0.8), rgba(0, 100, 0, 0.6));
+            width: 700px;
+            height: 550px;
+            top: 500px;
+            left: 1200px;
+        }
+
+        .zone-mountain {
+            background: linear-gradient(135deg, rgba(105, 105, 105, 0.8), rgba(169, 169, 169, 0.6));
+            width: 600px;
+            height: 450px;
+            top: 100px;
+            left: 2000px;
+        }
+
+        /* Clan Villages */
+        .clan-village {
             position: absolute;
-            width: 60px;
-            height: 60px;
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.9), rgba(184, 134, 11, 0.7));
             border: 3px solid #ffd700;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            animation: clanGlow 2s ease-in-out infinite;
+        }
+
+        /* Digging Tiles */
+        .dig-tile {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: rgba(139, 69, 19, 0.7);
+            border: 1px solid #8b4513;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dig-tile:hover {
+            background: rgba(139, 69, 19, 1);
+            transform: scale(1.1);
+        }
+
+        .dig-tile.dug {
+            background: rgba(101, 67, 33, 0.5);
+            cursor: default;
+        }
+
+        /* Enhanced Player Character */
+        .player-character {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border: 4px solid #ffd700;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
+            font-size: 36px;
             z-index: 200;
             transition: all 0.3s ease;
             cursor: move;
+            top: 1400px;
+            left: 2000px;
+        }
+
+        .player-warrior {
+            background: linear-gradient(135deg, #dc143c, #b22222);
+            box-shadow: 0 0 25px rgba(220, 20, 60, 0.8);
+        }
+
+        .player-mage {
             background: linear-gradient(135deg, #4169e1, #0000cd);
-            box-shadow: 0 0 20px rgba(65, 105, 225, 0.8);
+            box-shadow: 0 0 25px rgba(65, 105, 225, 0.8);
         }
 
-        .player.transformed {
-            width: 80px;
-            height: 80px;
-            font-size: 36px;
-            border-width: 4px;
-            animation: transformGlow 2s ease-in-out infinite;
+        .player-archer {
+            background: linear-gradient(135deg, #228b22, #006400);
+            box-shadow: 0 0 25px rgba(34, 139, 34, 0.8);
         }
 
-        @keyframes transformGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
-            50% { box-shadow: 0 0 40px rgba(255, 215, 0, 1); }
+        .player-rogue {
+            background: linear-gradient(135deg, #696969, #2f2f2f);
+            box-shadow: 0 0 25px rgba(105, 105, 105, 0.8);
         }
 
         /* Pet System */
         .pet {
             position: absolute;
-            width: 45px;
-            height: 45px;
-            border: 2px solid #ffeb3b;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            border: 3px solid #ffeb3b;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 24px;
             z-index: 190;
             cursor: pointer;
+            top: 1450px;
+            left: 1920px;
             transition: all 0.3s ease;
-            animation: petFloat 3s ease-in-out infinite;
-        }
-
-        @keyframes petFloat {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-15px) scale(1.1); }
+            animation: petFloat 2s ease-in-out infinite;
         }
 
         .pet.transformed {
-            width: 60px;
-            height: 60px;
-            font-size: 28px;
-            animation: petTransform 2s ease-in-out infinite;
+            width: 100px;
+            height: 100px;
+            font-size: 40px;
+            animation: petTransformed 1s ease-in-out infinite;
         }
 
-        @keyframes petTransform {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(255, 235, 59, 0.6); }
-            50% { transform: scale(1.15); box-shadow: 0 0 25px rgba(255, 235, 59, 1); }
-        }
-
-        /* Robot Fusion */
-        .robot {
+        /* Robot Fusion System */
+        .robot-fusion {
             position: absolute;
-            width: 120px;
-            height: 120px;
-            border: 5px solid #ff00ff;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            border: 6px solid #ffd700;
             border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 48px;
+            font-size: 80px;
             z-index: 250;
-            background: linear-gradient(135deg, #8a2be2, #4b0082);
-            animation: robotPower 1.5s ease-in-out infinite;
-            box-shadow: 0 0 30px rgba(255, 0, 255, 0.8);
+            animation: robotGlow 1s ease-in-out infinite;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
         }
 
-        @keyframes robotPower {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        /* Mining Tiles */
-        .mining-tile {
+        /* Enhanced Monster System */
+        .monster {
             position: absolute;
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #8b4513, #a0522d);
-            border: 2px solid #cd853f;
-            border-radius: 8px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
             cursor: pointer;
             transition: all 0.3s ease;
+            z-index: 100;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
         }
 
-        .mining-tile:hover {
+        .monster:hover {
             transform: scale(1.1);
-            box-shadow: 0 0 15px rgba(205, 133, 63, 0.8);
+            filter: brightness(1.2);
         }
 
-        .mining-tile.rare {
-            background: linear-gradient(135deg, #4169e1, #0000cd);
-            border-color: #1e90ff;
-            animation: rareGlow 2s ease-in-out infinite;
-        }
-
-        @keyframes rareGlow {
-            0%, 100% { box-shadow: 0 0 10px rgba(30, 144, 255, 0.6); }
-            50% { box-shadow: 0 0 20px rgba(30, 144, 255, 1); }
+        .dragon {
+            width: 120px;
+            height: 120px;
+            font-size: 48px;
+            background: linear-gradient(135deg, #8b0000, #ff0000);
+            border: 6px solid #ff4500;
+            animation: dragonGlow 2s ease-in-out infinite;
+            z-index: 120;
         }
 
         /* Campfire */
@@ -272,60 +380,55 @@
             position: absolute;
             width: 80px;
             height: 80px;
-            background: radial-gradient(circle, #ff4500, #ff8c00, #ffa500);
-            border: 3px solid #ff6347;
+            background: linear-gradient(135deg, #ff4500, #ff6347);
+            border: 3px solid #ffd700;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 32px;
             cursor: pointer;
-            animation: fireFlicker 1.5s ease-in-out infinite;
-            z-index: 100;
+            animation: fireGlow 1.5s ease-in-out infinite;
+            z-index: 110;
         }
 
-        @keyframes fireFlicker {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 69, 0, 0.8); }
-            50% { transform: scale(1.1); box-shadow: 0 0 30px rgba(255, 140, 0, 1); }
-        }
-
-        /* UI Panel */
+        /* Enhanced UI Panel */
         .ui-panel {
             width: 450px;
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(20, 20, 30, 0.9));
-            border-left: 4px solid #ff6b35;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(20, 20, 20, 0.9));
+            border-left: 4px solid #d4af37;
             display: flex;
             flex-direction: column;
             overflow-y: auto;
-            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.7);
+            box-shadow: -8px 0 25px rgba(0, 0, 0, 0.6);
         }
 
         .panel-header {
-            background: linear-gradient(135deg, #ff6b35, #e55d2b);
-            color: #fff;
+            background: linear-gradient(135deg, #d4af37, #b8860b);
+            color: #000;
             padding: 20px;
             text-align: center;
             font-weight: bold;
             font-size: 18px;
-            border-bottom: 3px solid #ff8c00;
+            border-bottom: 3px solid #ffd700;
         }
 
         .panel-section {
             padding: 15px;
-            border-bottom: 1px solid #444;
+            border-bottom: 1px solid #333;
         }
 
         .section-title {
             font-size: 16px;
             font-weight: bold;
-            color: #ff6b35;
+            color: #d4af37;
             margin-bottom: 12px;
             padding-bottom: 5px;
             border-bottom: 2px solid #444;
         }
 
-        /* Character Stats */
-        .character-stats {
+        /* Enhanced Stats Grid */
+        .player-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
@@ -333,7 +436,7 @@
         }
 
         .stat-item {
-            background: linear-gradient(135deg, rgba(40, 40, 60, 0.9), rgba(60, 60, 80, 0.7));
+            background: linear-gradient(135deg, rgba(40, 40, 40, 0.9), rgba(60, 60, 60, 0.7));
             border: 2px solid #555;
             border-radius: 10px;
             padding: 10px;
@@ -342,9 +445,8 @@
         }
 
         .stat-item:hover {
-            border-color: #ff6b35;
+            border-color: #d4af37;
             transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
         }
 
         .stat-value {
@@ -362,50 +464,39 @@
         /* Skin System */
         .skin-selector {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
             margin-bottom: 15px;
         }
 
-        .skin-option {
-            aspect-ratio: 1;
-            background: rgba(30, 30, 50, 0.9);
+        .skin-card {
+            background: rgba(40, 40, 40, 0.9);
             border: 2px solid #666;
             border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            padding: 15px;
+            text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 20px;
-            position: relative;
         }
 
-        .skin-option:hover {
-            border-color: #ff6b35;
-            transform: scale(1.1);
-            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+        .skin-card:hover {
+            border-color: #d4af37;
+            transform: scale(1.05);
         }
 
-        .skin-option.selected {
+        .skin-card.equipped {
             border-color: #4caf50;
-            background: linear-gradient(135deg, rgba(76, 175, 80, 0.4), rgba(76, 175, 80, 0.2));
-            box-shadow: 0 0 20px rgba(76, 175, 80, 0.6);
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.3), rgba(76, 175, 80, 0.1));
         }
 
-        .skin-price {
-            position: absolute;
-            bottom: -5px;
-            right: -5px;
-            background: #ffd700;
-            color: #000;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
+        .skin-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .skin-name {
+            font-size: 12px;
+            color: #d4af37;
             font-weight: bold;
         }
 
@@ -413,14 +504,14 @@
         .gem-sockets {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 5px;
-            margin-bottom: 15px;
+            gap: 8px;
+            margin: 10px 0;
         }
 
         .gem-socket {
             aspect-ratio: 1;
-            background: rgba(20, 20, 30, 0.9);
-            border: 2px solid #333;
+            background: rgba(30, 30, 30, 0.9);
+            border: 2px solid #666;
             border-radius: 8px;
             display: flex;
             align-items: center;
@@ -428,148 +519,67 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 16px;
-            position: relative;
         }
 
         .gem-socket:hover {
-            border-color: #ff6b35;
-            box-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
+            border-color: #d4af37;
         }
 
         .gem-socket.filled {
             border-color: #4caf50;
-            animation: gemGlow 2s ease-in-out infinite;
         }
 
-        @keyframes gemGlow {
-            0%, 100% { box-shadow: 0 0 10px rgba(76, 175, 80, 0.6); }
-            50% { box-shadow: 0 0 20px rgba(76, 175, 80, 1); }
-        }
+        .gem-socket.ruby { border-color: #ff0000; background: rgba(255, 0, 0, 0.2); }
+        .gem-socket.emerald { border-color: #00ff00; background: rgba(0, 255, 0, 0.2); }
+        .gem-socket.sapphire { border-color: #0066ff; background: rgba(0, 102, 255, 0.2); }
+        .gem-socket.diamond { border-color: #ffffff; background: rgba(255, 255, 255, 0.2); }
 
-        .gem-socket.rare {
-            border-color: #9c27b0;
-            animation: rareGemGlow 2s ease-in-out infinite;
-        }
-
-        @keyframes rareGemGlow {
-            0%, 100% { box-shadow: 0 0 10px rgba(156, 39, 176, 0.6); }
-            50% { box-shadow: 0 0 20px rgba(156, 39, 176, 1); }
-        }
-
-        /* Equipment System */
-        .equipment-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-bottom: 15px;
-        }
-
-        .equipment-slot {
-            aspect-ratio: 1;
-            background: rgba(30, 30, 50, 0.9);
-            border: 3px solid #666;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 24px;
-            position: relative;
-        }
-
-        .equipment-slot:hover {
-            border-color: #ff6b35;
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
-        }
-
-        .equipment-slot.equipped {
-            border-color: #4caf50;
-            background: linear-gradient(135deg, rgba(76, 175, 80, 0.3), rgba(76, 175, 80, 0.1));
-            box-shadow: 0 0 15px rgba(76, 175, 80, 0.4);
-        }
-
-        .equipment-level {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #ff6b35;
-            color: #fff;
-            border-radius: 50%;
-            width: 20px;
+        /* Transformation System */
+        .transformation-bar {
+            width: 100%;
             height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: bold;
+            background: rgba(40, 40, 40, 0.8);
+            border: 2px solid #555;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
         }
 
-        /* Pet Management */
-        .pet-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
+        .transformation-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b35, #f7931e);
+            transition: width 0.3s ease;
         }
 
-        .pet-slot {
-            background: rgba(30, 30, 50, 0.9);
-            border: 3px solid #666;
-            border-radius: 15px;
-            padding: 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .pet-slot:hover {
-            border-color: #ff6b35;
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(255, 107, 53, 0.3);
-        }
-
-        .pet-slot.active {
-            border-color: #4caf50;
-            background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(76, 175, 80, 0.1));
-        }
-
-        .pet-icon {
-            font-size: 32px;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .pet-level {
+        /* PvP System */
+        .pvp-indicator {
             position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #2196f3;
-            color: #fff;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 5px;
             font-size: 12px;
             font-weight: bold;
         }
 
-        /* Skills System */
-        .skills-grid {
+        .pvp-indicator.safe {
+            background: rgba(0, 255, 0, 0.8);
+        }
+
+        /* Skill System */
+        .skill-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 6px;
+            gap: 8px;
             margin-bottom: 15px;
         }
 
         .skill-slot {
             aspect-ratio: 1;
-            background: rgba(30, 30, 50, 0.9);
+            background: rgba(30, 30, 30, 0.9);
             border: 2px solid #666;
             border-radius: 8px;
             display: flex;
@@ -582,225 +592,113 @@
         }
 
         .skill-slot:hover {
-            border-color: #ff6b35;
-            transform: scale(1.1);
-            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+            border-color: #d4af37;
         }
 
-        .skill-slot.active {
+        .skill-slot.equipped {
             border-color: #4caf50;
-            background: linear-gradient(135deg, rgba(76, 175, 80, 0.4), rgba(76, 175, 80, 0.2));
-            animation: skillActive 2s ease-in-out infinite;
-        }
-
-        @keyframes skillActive {
-            0%, 100% { box-shadow: 0 0 15px rgba(76, 175, 80, 0.6); }
-            50% { box-shadow: 0 0 25px rgba(76, 175, 80, 1); }
         }
 
         .skill-cooldown {
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
+            width: 100%;
+            height: 100%;
             background: rgba(0, 0, 0, 0.7);
-            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: white;
             font-size: 12px;
-            color: #fff;
-        }
-
-        /* Clan System */
-        .clan-panel {
-            background: rgba(30, 30, 50, 0.95);
-            border: 3px solid #9c27b0;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 5px 15px rgba(156, 39, 176, 0.3);
-        }
-
-        .clan-header {
-            color: #9c27b0;
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .clan-buildings {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .building-slot {
-            background: rgba(40, 40, 60, 0.8);
-            border: 2px solid #777;
-            border-radius: 8px;
-            padding: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 12px;
-        }
-
-        .building-slot:hover {
-            border-color: #9c27b0;
-            transform: scale(1.05);
-        }
-
-        .building-slot.built {
-            border-color: #4caf50;
-            background: rgba(76, 175, 80, 0.2);
+            border-radius: 6px;
         }
 
         /* Arena System */
         .arena-panel {
-            background: rgba(139, 0, 0, 0.2);
-            border: 3px solid #dc143c;
-            border-radius: 12px;
+            background: rgba(139, 0, 139, 0.2);
+            border: 2px solid #8b008b;
+            border-radius: 10px;
             padding: 15px;
-            margin-bottom: 15px;
+            margin: 10px 0;
         }
 
-        .arena-modes {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .arena-mode {
-            background: rgba(220, 20, 60, 0.3);
-            border: 2px solid #dc143c;
-            border-radius: 8px;
-            padding: 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .arena-mode:hover {
-            background: rgba(220, 20, 60, 0.5);
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(220, 20, 60, 0.4);
-        }
-
-        /* Progress Bars */
-        .progress-bar {
+        .arena-queue-btn {
             width: 100%;
-            height: 12px;
-            background: rgba(40, 40, 60, 0.8);
-            border: 2px solid #666;
-            border-radius: 8px;
-            overflow: hidden;
-            margin: 8px 0;
-        }
-
-        .progress-fill {
-            height: 100%;
-            transition: width 0.5s ease;
-            border-radius: 6px;
-        }
-
-        .health-fill {
-            background: linear-gradient(90deg, #e74c3c, #c0392b);
-            box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
-        }
-
-        .mana-fill {
-            background: linear-gradient(90deg, #3498db, #2980b9);
-            box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
-        }
-
-        .exp-fill {
-            background: linear-gradient(90deg, #f39c12, #e67e22);
-            box-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
-        }
-
-        .pet-exp-fill {
-            background: linear-gradient(90deg, #9c27b0, #7b1fa2);
-            box-shadow: 0 0 10px rgba(156, 39, 176, 0.5);
-        }
-
-        /* Action Buttons */
-        .action-buttons {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-bottom: 15px;
-        }
-
-        .action-btn {
             padding: 12px;
-            background: linear-gradient(135deg, #ff6b35, #e55d2b);
+            background: linear-gradient(135deg, #8b008b, #9932cc);
             border: none;
             border-radius: 8px;
             color: white;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 13px;
-            box-shadow: 0 3px 8px rgba(255, 107, 53, 0.3);
         }
 
-        .action-btn:hover:not(:disabled) {
+        .arena-queue-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(255, 107, 53, 0.5);
+            box-shadow: 0 5px 15px rgba(139, 0, 139, 0.4);
         }
 
-        .action-btn.transform {
-            background: linear-gradient(135deg, #9c27b0, #7b1fa2);
-            box-shadow: 0 3px 8px rgba(156, 39, 176, 0.3);
+        /* Dragon Summoning */
+        .dragon-orb {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, #ffd700, #ff8c00);
+            border: 2px solid #ff4500;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            animation: orbGlow 2s ease-in-out infinite;
+            cursor: pointer;
+            z-index: 150;
         }
 
-        .action-btn.mine {
-            background: linear-gradient(135deg, #8b4513, #a0522d);
-            box-shadow: 0 3px 8px rgba(139, 69, 19, 0.3);
+        /* Secret Realm Portal */
+        .secret-portal {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.8), rgba(75, 0, 130, 0.6));
+            border: 4px solid #9370db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            animation: portalSpin 3s linear infinite;
+            cursor: pointer;
+            z-index: 140;
         }
 
-        .action-btn:disabled {
-            background: #666;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        /* Minimap */
+        /* Enhanced Minimap */
         .minimap {
             position: absolute;
             top: 20px;
             right: 20px;
             width: 300px;
             height: 220px;
-            background: rgba(0, 0, 0, 0.8);
-            border: 4px solid #ff6b35;
-            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 4px solid #d4af37;
+            border-radius: 12px;
             z-index: 1000;
             overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
         }
 
         .minimap-content {
             width: 100%;
             height: 100%;
             position: relative;
-            background: linear-gradient(45deg, #2d5016 0%, #4a7c59 50%, #2d5016 100%);
+            background: linear-gradient(45deg, #228b22 0%, #32cd32 50%, #228b22 100%);
         }
 
         .minimap-player {
             position: absolute;
-            width: 8px;
-            height: 8px;
+            width: 12px;
+            height: 12px;
             background: #ff6b35;
             border: 2px solid #ffd700;
             border-radius: 50%;
@@ -808,38 +706,28 @@
             animation: minimapPulse 2s ease-in-out infinite;
         }
 
-        @keyframes minimapPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.4); }
-        }
-
-        .minimap-zone {
+        .minimap-clan-member {
             position: absolute;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            border-radius: 3px;
-            font-size: 10px;
-        }
-
-        .minimap-player-dot {
-            position: absolute;
-            width: 4px;
-            height: 4px;
+            width: 8px;
+            height: 8px;
             background: #00ff00;
+            border: 1px solid #ffffff;
             border-radius: 50%;
         }
 
-        .minimap-clan-dot {
+        .minimap-ping {
             position: absolute;
-            width: 4px;
-            height: 4px;
-            background: #9c27b0;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ff0000;
             border-radius: 50%;
+            animation: pingExpand 2s ease-out infinite;
         }
 
-        /* Chat System */
+        /* Chat System Enhancement */
         .chat-window {
             background: rgba(0, 0, 0, 0.9);
-            border: 2px solid #666;
+            border: 2px solid #555;
             border-radius: 10px;
             height: 200px;
             overflow-y: auto;
@@ -848,254 +736,191 @@
             margin-bottom: 12px;
         }
 
-        .chat-message {
-            margin-bottom: 4px;
-            padding: 4px 8px;
+        .chat-input-container {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 8px;
+            border: 2px solid #555;
             border-radius: 5px;
-            word-wrap: break-word;
-            line-height: 1.4;
-            animation: messageSlide 0.3s ease-out;
-        }
-
-        @keyframes messageSlide {
-            from { transform: translateX(-20px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        .chat-message.system {
-            color: #ffd700;
-            background: rgba(255, 215, 0, 0.1);
-            border-left: 3px solid #ffd700;
-        }
-
-        .chat-message.clan {
-            color: #9c27b0;
-            background: rgba(156, 39, 176, 0.1);
-            border-left: 3px solid #9c27b0;
-        }
-
-        .chat-message.world {
-            color: #ff6b35;
-            background: rgba(255, 107, 53, 0.1);
-        }
-
-        .chat-message.pk {
-            color: #dc143c;
-            background: rgba(220, 20, 60, 0.1);
-            font-weight: bold;
-        }
-
-        /* Modal System */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 4000;
-        }
-
-        .modal-content {
-            background: linear-gradient(135deg, rgba(20, 20, 30, 0.95), rgba(40, 40, 60, 0.9));
-            border: 4px solid #ff6b35;
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 800px;
-            max-height: 80vh;
-            overflow-y: auto;
+            background: rgba(40, 40, 40, 0.9);
             color: white;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
-            animation: modalSlide 0.3s ease-out;
+            font-size: 12px;
         }
 
-        @keyframes modalSlide {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .modal-header {
-            background: linear-gradient(135deg, #ff6b35, #e55d2b);
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 20px;
-            margin: -30px -30px 30px -30px;
-            border-radius: 16px 16px 0 0;
-        }
-
-        .close-btn {
-            float: right;
-            background: none;
+        .chat-send-btn {
+            padding: 8px 15px;
+            background: linear-gradient(135deg, #4caf50, #45a049);
             border: none;
-            color: #fff;
-            font-size: 28px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
             cursor: pointer;
-            margin-top: -8px;
+        }
+
+        .chat-tabs {
+            display: flex;
+            margin-bottom: 5px;
+        }
+
+        .chat-tab {
+            flex: 1;
+            padding: 5px;
+            background: rgba(40, 40, 40, 0.7);
+            border: 1px solid #555;
+            color: #ccc;
+            cursor: pointer;
+            font-size: 10px;
+            text-align: center;
+        }
+
+        .chat-tab.active {
+            background: rgba(212, 175, 55, 0.3);
+            color: #d4af37;
+            border-color: #d4af37;
+        }
+
+        /* Enhanced Equipment System */
+        .equipment-enhancement {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .equipment-preview {
+            background: rgba(40, 40, 40, 0.9);
+            border: 2px solid #666;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .equipment-stats {
+            background: rgba(40, 40, 40, 0.9);
+            border: 2px solid #666;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .enhancement-btn {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
             transition: all 0.3s ease;
         }
 
-        .close-btn:hover {
-            color: #ff6b35;
-            transform: scale(1.2);
+        .enhancement-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.4);
         }
 
-        /* Gem Enhancement Modal */
-        .gem-enhancement {
+        /* Clan System */
+        .clan-info {
+            background: rgba(139, 0, 139, 0.2);
+            border: 2px solid #8b008b;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .clan-buildings {
             display: grid;
-            grid-template-columns: 1fr 2fr 1fr;
-            gap: 20px;
-            margin: 20px 0;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
         }
 
-        .gem-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .gem-item {
-            background: rgba(40, 40, 60, 0.8);
+        .building-card {
+            background: rgba(40, 40, 40, 0.9);
             border: 2px solid #666;
             border-radius: 8px;
             padding: 10px;
-            margin-bottom: 8px;
+            text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
-        .gem-item:hover {
-            border-color: #ff6b35;
-            transform: translateX(5px);
+        .building-card:hover {
+            border-color: #d4af37;
         }
 
-        .gem-item.selected {
-            border-color: #4caf50;
-            background: rgba(76, 175, 80, 0.2);
+        .building-level {
+            font-size: 14px;
+            font-weight: bold;
+            color: #d4af37;
         }
 
-        .gem-preview {
-            text-align: center;
-            background: rgba(20, 20, 30, 0.8);
-            border: 3px solid #666;
-            border-radius: 15px;
-            padding: 20px;
+        /* Animation Keyframes */
+        @keyframes safeZoneGlow {
+            0%, 100% { box-shadow: 0 0 25px rgba(0, 255, 0, 0.6); }
+            50% { box-shadow: 0 0 45px rgba(0, 255, 0, 0.9); }
         }
 
-        .success-chance {
-            margin-top: 15px;
-            padding: 10px;
-            background: rgba(255, 107, 53, 0.2);
-            border: 2px solid #ff6b35;
-            border-radius: 8px;
-            text-align: center;
+        @keyframes clanGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+            50% { box-shadow: 0 0 35px rgba(255, 215, 0, 0.9); }
         }
 
-        /* Dragon Summoning */
-        .dragon-portal {
-            position: absolute;
-            width: 100px;
-            height: 100px;
-            background: radial-gradient(circle, #9c27b0, #4b0082, #8a2be2);
-            border: 5px solid #ff00ff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            animation: portalSpin 3s linear infinite;
-            z-index: 300;
-            cursor: pointer;
+        @keyframes petFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-15px) scale(1.05); }
         }
 
-        @keyframes portalSpin {
-            0% { transform: rotate(0deg); box-shadow: 0 0 30px rgba(156, 39, 176, 0.8); }
-            50% { box-shadow: 0 0 50px rgba(255, 0, 255, 1); }
-            100% { transform: rotate(360deg); box-shadow: 0 0 30px rgba(156, 39, 176, 0.8); }
+        @keyframes petTransformed {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(5deg); }
         }
 
-        /* Secret Realm */
-        .secret-realm {
-            position: absolute;
-            width: 200px;
-            height: 150px;
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 255, 224, 0.2));
-            border: 4px solid #ffd700;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            animation: realmGlow 2s ease-in-out infinite;
-            z-index: 200;
-            cursor: pointer;
-        }
-
-        @keyframes realmGlow {
+        @keyframes robotGlow {
             0%, 100% { 
-                box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
+                box-shadow: 0 0 30px rgba(255, 107, 53, 0.8);
                 transform: scale(1);
             }
             50% { 
-                box-shadow: 0 0 45px rgba(255, 255, 224, 0.9);
+                box-shadow: 0 0 50px rgba(255, 107, 53, 1);
                 transform: scale(1.05);
             }
         }
 
-        /* Notifications */
-        .notification {
-            position: fixed;
-            top: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 15px 25px;
-            background: linear-gradient(135deg, #4caf50, #45a049);
-            border-radius: 10px;
-            color: white;
-            font-weight: bold;
-            z-index: 3000;
-            animation: slideDown 0.5s ease-out, slideUp 0.5s ease-out 4s forwards;
-            font-size: 16px;
-            border: 3px solid #66bb6a;
-            max-width: 600px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-            text-align: center;
+        @keyframes dragonGlow {
+            0%, 100% { box-shadow: 0 0 30px rgba(139, 0, 0, 0.8); }
+            50% { box-shadow: 0 0 50px rgba(255, 0, 0, 1); }
         }
 
-        .notification.warning {
-            background: linear-gradient(135deg, #ff9800, #f57c00);
-            border-color: #ffb74d;
+        @keyframes fireGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 69, 0, 0.6); }
+            50% { box-shadow: 0 0 35px rgba(255, 99, 71, 0.9); }
         }
 
-        .notification.error {
-            background: linear-gradient(135deg, #f44336, #d32f2f);
-            border-color: #ef5350;
+        @keyframes orbGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.8); }
+            50% { box-shadow: 0 0 25px rgba(255, 140, 0, 1); }
         }
 
-        .notification.pk {
-            background: linear-gradient(135deg, #dc143c, #b22222);
-            border-color: #ff6b6b;
+        @keyframes portalSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        .notification.dragon {
-            background: linear-gradient(135deg, #9c27b0, #7b1fa2);
-            border-color: #ba68c8;
+        @keyframes minimapPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
         }
 
-        @keyframes slideDown {
-            from { transform: translateX(-50%) translateY(-100%); }
-            to { transform: translateX(-50%) translateY(0); }
-        }
-
-        @keyframes slideUp {
-            from { transform: translateX(-50%) translateY(0); }
-            to { transform: translateX(-50%) translateY(-100%); }
+        @keyframes pingExpand {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
         }
 
         /* Responsive Design */
@@ -1111,92 +936,339 @@
 
         @media (max-width: 768px) {
             .game-container { flex-direction: column; }
-            .ui-panel {
-                width: 100%;
-                height: 300px;
-                flex-direction: row;
-                overflow-x: auto;
-            }
+            .ui-panel { width: 100%; height: 300px; flex-direction: row; overflow-x: auto; }
             .panel-section { min-width: 280px; }
             .minimap { width: 180px; height: 130px; }
+            .class-selection { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div class="loading-screen" id="loadingScreen">
-        <div class="loading-title">🐉 DREAMBOOKS 🐉</div>
-        <div class="loading-bar">
-            <div class="loading-progress" id="loadingProgress"></div>
+    <!-- Character Selection -->
+    <div class="character-selection" id="characterSelection">
+        <div class="character-panel">
+            <div class="character-title">🎭 CHỌN NGHỀ NGHIỆP - DREAMBOOKS</div>
+            <div class="class-selection" id="classSelection">
+                <div class="class-card" data-class="warrior">
+                    <div class="class-icon">⚔️</div>
+                    <div class="class-name">Chiến Binh</div>
+                    <div>HP cao, phòng thủ mạnh, skills buff đồng đội</div>
+                </div>
+                <div class="class-card" data-class="mage">
+                    <div class="class-icon">🔮</div>
+                    <div class="class-name">Pháp Sư</div>
+                    <div>Phép thuật mạnh, skills đa dạng, hỗ trợ team</div>
+                </div>
+                <div class="class-card" data-class="archer">
+                    <div class="class-icon">🏹</div>
+                    <div class="class-name">Cung Thủ</div>
+                    <div>Tấn công xa, tốc độ cao, crit rate tốt</div>
+                </div>
+                <div class="class-card" data-class="rogue">
+                    <div class="class-icon">🗡️</div>
+                    <div class="class-name">Sát Thủ</div>
+                    <div>Sát thương cực cao, tàng hình, burst damage</div>
+                </div>
+            </div>
+            <button class="start-game-btn" id="startGameBtn" disabled>BẮT ĐẦU PHIÊU LƯU</button>
         </div>
-        <div style="color: #ccc; font-size: 18px; margin-top: 15px;" id="loadingText">Đang khởi tạo thế giới...</div>
     </div>
 
     <div class="game-container" id="gameContainer" style="display: none;">
         <div class="game-world" id="gameWorld">
             <div class="world-map" id="worldMap">
-                <!-- Safe Zone -->
-                <div class="zone zone-safe" onclick="enterZone('safe')">
-                    🛡️ Thảo Nguyên An Toàn<br>
-                    <small>PK không mất đồ</small>
+                <!-- Safe Zone - Thảo Nguyên (PK không mất đồ) -->
+                <div class="map-zone zone-grassland" onclick="enterZone('grassland')">
+                    <div>🌱 THẢO NGUYÊN AN TOÀN</div>
+                    <div style="font-size: 12px; margin-top: 5px;">PK không mất đồ</div>
                 </div>
-                
-                <!-- Ice Zone -->
-                <div class="zone zone-ice" onclick="enterZone('ice')">
-                    ❄️ Vùng Băng Giá<br>
-                    <small>Lv.10-20</small>
+
+                <!-- PvP Zones (PK rơi đồ) -->
+                <div class="map-zone zone-ice" onclick="enterZone('ice')">
+                    <div>❄️ VÙNG BĂNG GIÁ</div>
+                    <div style="font-size: 12px; margin-top: 5px;">PvP Zone - Rơi đồ</div>
                 </div>
-                
-                <!-- Fire Zone -->
-                <div class="zone zone-fire" onclick="enterZone('fire')">
-                    🔥 Vùng Lửa<br>
-                    <small>Lv.20-30</small>
+
+                <div class="map-zone zone-fire" onclick="enterZone('fire')">
+                    <div>🔥 VÙNG LỬA</div>
+                    <div style="font-size: 12px; margin-top: 5px;">PvP Zone - Rơi đồ</div>
                 </div>
-                
-                <!-- Cemetery -->
-                <div class="zone zone-cemetery" onclick="enterZone('cemetery')">
-                    ⚰️ Nghĩa Địa<br>
-                    <small>Lv.15-25</small>
+
+                <div class="map-zone zone-graveyard" onclick="enterZone('graveyard')">
+                    <div>⚰️ NGHĨA ĐỊA</div>
+                    <div style="font-size: 12px; margin-top: 5px;">PvP Zone - Rơi đồ</div>
                 </div>
-                
+
+                <div class="map-zone zone-forest" onclick="enterZone('forest')">
+                    <div>🌲 RỪNG SÂU</div>
+                    <div style="font-size: 12px; margin-top: 5px;">PvP Zone - Rơi đồ</div>
+                </div>
+
+                <div class="map-zone zone-mountain" onclick="enterZone('mountain')">
+                    <div>⛰️ NÚI CAO</div>
+                    <div style="font-size: 12px; margin-top: 5px;">PvP Zone - Rơi đồ</div>
+                </div>
+
+                <!-- Clan Villages -->
+                <div class="clan-village" style="top: 800px; left: 800px;" onclick="enterClanVillage('village1')">
+                    🏰<br>CLAN 1
+                </div>
+                <div class="clan-village" style="top: 600px; left: 2500px;" onclick="enterClanVillage('village2')">
+                    🏰<br>CLAN 2
+                </div>
+                <div class="clan-village" style="top: 2200px; left: 1500px;" onclick="enterClanVillage('village3')">
+                    🏰<br>CLAN 3
+                </div>
+
+                <!-- Campfires for Enhancement -->
+                <div class="campfire" style="top: 1000px; left: 1200px;" onclick="openEnhancement()" title="Lửa trại - Khảm ngọc & Tiến hóa">
+                    🔥
+                </div>
+                <div class="campfire" style="top: 1600px; left: 2800px;" onclick="openEnhancement()">
+                    🔥
+                </div>
+
                 <!-- Player -->
-                <div class="player" id="player">🧙‍♂️</div>
-                
-                <!-- Pet -->
-                <div class="pet" id="pet" style="background: linear-gradient(135deg, #ff9800, #f57c00);">🐺</div>
-                
-                <!-- Campfires -->
-                <div class="campfire" id="campfire1" style="top: 1000px; left: 1500px;" onclick="openCampfire()" title="Lửa trại - Khảm ngọc & Tiến hóa">🔥</div>
-                <div class="campfire" id="campfire2" style="top: 600px; left: 2500px;" onclick="openCampfire()">🔥</div>
+                <div class="player-character" id="player">🧙</div>
+                <div class="pet" id="pet">🐺</div>
             </div>
             
-            <!-- Minimap -->
+            <!-- Enhanced Minimap -->
             <div class="minimap">
                 <div class="minimap-content" id="minimapContent">
                     <div class="minimap-player" id="minimapPlayer"></div>
-                    <!-- Zone indicators on minimap -->
-                    <div class="minimap-zone" style="top: 60%; left: 42%; width: 15%; height: 18%; background: rgba(50, 205, 50, 0.5);"></div>
-                    <div class="minimap-zone" style="top: 10%; left: 12%; width: 12%; height: 16%; background: rgba(173, 216, 230, 0.5);"></div>
-                    <div class="minimap-zone" style="top: 18%; left: 70%; width: 11%; height: 18%; background: rgba(255, 69, 0, 0.5);"></div>
-                    <div class="minimap-zone" style="top: 82%; left: 20%; width: 10%; height: 14%; background: rgba(75, 0, 130, 0.5);"></div>
                 </div>
             </div>
         </div>
 
-        <!-- UI Panel -->
+        <!-- Enhanced UI Panel -->
         <div class="ui-panel">
             <div class="panel-header">
-                <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
-                    <span id="playerIcon">🧙‍♂️</span>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+                    <div id="classIndicator" style="font-size: 28px;">⚔️</div>
                     <div>
-                        <div style="font-size: 18px;" id="playerName">DragonSlayer</div>
-                        <div style="font-size: 12px; opacity: 0.8;">Lv.<span id="playerLevel">1</span> | 💰 <span id="playerGold">1000</span></div>
+                        <div id="playerName" style="font-size: 18px; font-weight: bold;">Warrior</div>
+                        <div id="playerClass" style="font-size: 14px;">Chiến Binh</div>
                     </div>
-                    
-                    <div style="margin-top: 10px;">
-                        <button class="action-btn" onclick="openBossCard()" style="font-size: 11px;">
-                            🃏 Đào Thẻ Boss
+                </div>
+            </div>
+            
+            <!-- Player Stats -->
+            <div class="panel-section">
+                <div class="section-title">📊 Thông Số Nhân Vật</div>
+                <div class="player-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="playerLevel">1</div>
+                        <div class="stat-label">Cấp Độ</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="playerGold">1000</div>
+                        <div class="stat-label">Vàng</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="playerDiamond">50</div>
+                        <div class="stat-label">Kim Cương</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="playerAttack">100</div>
+                        <div class="stat-label">Sát Thương</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="playerDefense">50</div>
+                        <div class="stat-label">Phòng Thủ</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="playerSpeed">100</div>
+                        <div class="stat-label">Tốc Độ</div>
+                    </div>
+                </div>
+                
+                <!-- Health & Transformation Bars -->
+                <div style="margin: 10px 0;">
+                    <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px;">
+                        <span>HP: <span id="currentHp">1000</span>/<span id="maxHp">1000</span></span>
+                        <span>Shield: <span id="shieldStatus">❌</span></span>
+                    </div>
+                    <div style="width: 100%; height: 15px; background: rgba(40,40,40,0.8); border: 2px solid #555; border-radius: 8px; overflow: hidden;">
+                        <div id="healthBar" style="width: 100%; height: 100%; background: linear-gradient(90deg, #e74c3c, #c0392b); transition: width 0.3s ease;"></div>
+                    </div>
+                </div>
+
+                <div style="margin: 10px 0;">
+                    <div style="font-size: 12px; margin-bottom: 5px; text-align: center;">Biến Hình: <span id="transformationLevel">1/3</span></div>
+                    <div class="transformation-bar">
+                        <div class="transformation-fill" id="transformationBar" style="width: 33%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skin System -->
+            <div class="panel-section">
+                <div class="section-title">👤 Hệ Thống Skin</div>
+                <div class="skin-selector">
+                    <div class="skin-card equipped" data-skin="default">
+                        <div class="skin-icon">🧙</div>
+                        <div class="skin-name">Mặc Định</div>
+                        <div style="font-size: 10px; color: #ccc;">HP: +0 | ATK: +0 | SPD: +0</div>
+                    </div>
+                    <div class="skin-card" data-skin="royal">
+                        <div class="skin-icon">👑</div>
+                        <div class="skin-name">Hoàng Gia</div>
+                        <div style="font-size: 10px; color: #ccc;">HP: +200 | ATK: +50 | SPD: +20</div>
+                        <div style="font-size: 10px; color: #ffd700;">💎 500</div>
+                    </div>
+                    <div class="skin-card" data-skin="dragon">
+                        <div class="skin-icon">🐲</div>
+                        <div class="skin-name">Long Vương</div>
+                        <div style="font-size: 10px; color: #ccc;">HP: +500 | ATK: +100 | SPD: +50</div>
+                        <div style="font-size: 10px; color: #ffd700;">💎 1500</div>
+                    </div>
+                </div>
+                
+                <!-- Gem Sockets for Skin -->
+                <div style="margin-top: 15px;">
+                    <div style="font-size: 14px; font-weight: bold; margin-bottom: 8px;">Ô Khảm Ngọc Skin (12 ô)</div>
+                    <div class="gem-sockets">
+                        <div class="gem-socket" data-socket="0">💎</div>
+                        <div class="gem-socket ruby filled" data-socket="1">🔴</div>
+                        <div class="gem-socket emerald filled" data-socket="2">🟢</div>
+                        <div class="gem-socket" data-socket="3">💎</div>
+                        <div class="gem-socket sapphire filled" data-socket="4">🔵</div>
+                        <div class="gem-socket" data-socket="5">💎</div>
+                        <div class="gem-socket diamond filled" data-socket="6">⚪</div>
+                        <div class="gem-socket" data-socket="7">💎</div>
+                        <div class="gem-socket ruby filled" data-socket="8">🔴</div>
+                        <div class="gem-socket" data-socket="9">💎</div>
+                        <div class="gem-socket emerald filled" data-socket="10">🟢</div>
+                        <div class="gem-socket" data-socket="11">💎</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pet System -->
+            <div class="panel-section">
+                <div class="section-title">🐾 Hệ Thống Pet & Thú Cưỡi</div>
+                <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                            <div id="petIcon" style="font-size: 32px;">🐺</div>
+                            <div>
+                                <div style="font-size: 14px; font-weight: bold; color: #d4af37;" id="petName">Thunder Wolf</div>
+                                <div style="font-size: 11px; color: #ccc;">Lv.<span id="petLevel">5</span> | HP: <span id="petHp">800</span>/<span id="petMaxHp">800</span></div>
+                                <div style="font-size: 11px; color: #ff9800;">Biến hình: <span id="petTransform">2/3</span></div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 5px;">
+                            <button onclick="upgradePet()" style="flex: 1; padding: 8px; background: linear-gradient(135deg, #2196f3, #1976d2); border: none; border-radius: 5px; color: white; font-size: 11px; cursor: pointer;">
+                                💎 Nâng Cấp (100)
+                            </button>
+                            <button onclick="transformPet()" style="flex: 1; padding: 8px; background: linear-gradient(135deg, #ff9800, #f57c00); border: none; border-radius: 5px; color: white; font-size: 11px; cursor: pointer;">
+                                ✨ Biến Hình
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pet Gem Sockets -->
+                <div style="margin-bottom: 15px;">
+                    <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px;">Ô Khảm Ngọc Pet (12 ô)</div>
+                    <div class="gem-sockets">
+                        <div class="gem-socket ruby filled">🔴</div>
+                        <div class="gem-socket emerald filled">🟢</div>
+                        <div class="gem-socket sapphire filled">🔵</div>
+                        <div class="gem-socket">💎</div>
+                        <div class="gem-socket diamond filled">⚪</div>
+                        <div class="gem-socket">💎</div>
+                        <div class="gem-socket ruby filled">🔴</div>
+                        <div class="gem-socket">💎</div>
+                        <div class="gem-socket emerald filled">🟢</div>
+                        <div class="gem-socket">💎</div>
+                        <div class="gem-socket sapphire filled">🔵</div>
+                        <div class="gem-socket">💎</div>
+                    </div>
+                </div>
+
+                <!-- Robot Fusion -->
+                <div style="background: rgba(255, 107, 53, 0.2); border: 2px solid #ff6b35; border-radius: 8px; padding: 10px;">
+                    <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: #ff6b35;">🤖 Hợp Thể Robot</div>
+                    <div style="font-size: 10px; color: #ccc; margin-bottom: 8px;">Cần 5 người có thú cưỡi đặc biệt ở gần</div>
+                    <button id="robotFusionBtn" onclick="attemptRobotFusion()" disabled style="width: 100%; padding: 8px; background: #666; border: none; border-radius: 5px; color: white; font-size: 11px;">
+                        🤖 Hợp Thể (0/5)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Equipment System -->
+            <div class="panel-section">
+                <div class="section-title">⚔️ Hệ Thống Trang Bị</div>
+                <div class="equipment-enhancement">
+                    <div class="equipment-preview">
+                        <div style="font-size: 32px; margin-bottom: 10px;" id="selectedEquipIcon">⚔️</div>
+                        <div style="font-size: 12px; font-weight: bold; color: #d4af37;" id="selectedEquipName">Kiếm Rồng +7</div>
+                        <div style="font-size: 10px; color: #ccc;" id="selectedEquipLevel">Level 15</div>
+                        <div style="font-size: 10px; color: #ff9800; margin-top: 5px;" id="selectedEquipForm">Dạng 2/3</div>
+                    </div>
+                    <div class="equipment-stats">
+                        <div style="font-size: 11px; margin-bottom: 8px;">
+                            <div>⚔️ Sát thương: <span style="color: #4caf50;">+250</span></div>
+                            <div>🛡️ Phòng thủ: <span style="color: #4caf50;">+50</span></div>
+                            <div>⚡ Tốc độ: <span style="color: #4caf50;">+30</span></div>
+                            <div>💎 Chí mạng: <span style="color: #4caf50;">+15%</span></div>
+                        </div>
+                        <button class="enhancement-btn" onclick="enhanceEquipment()">
+                            💰 Nâng Cấp (+8) - 5000 Gold
                         </button>
+                        <div style="font-size: 10px; color: #ff9800; margin-top: 5px; text-align: center;">
+                            Tỷ lệ thành công: 65%
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Equipment Gem Sockets -->
+                <div style="margin-top: 15px;">
+                    <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px;">Ô Khảm Ngọc Trang Bị (8 ô)</div>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
+                        <div class="gem-socket ruby filled">🔴</div>
+                        <div class="gem-socket emerald filled">🟢</div>
+                        <div class="gem-socket sapphire filled">🔵</div>
+                        <div class="gem-socket diamond filled">⚪</div>
+                        <div class="gem-socket ruby filled">🔴</div>
+                        <div class="gem-socket">💎</div>
+                        <div class="gem-socket emerald filled">🟢</div>
+                        <div class="gem-socket">💎</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skill System -->
+            <div class="panel-section">
+                <div class="section-title">🎯 Hệ Thống Kỹ Năng</div>
+                <div style="margin-bottom: 15px;">
+                    <div style="font-size: 12px; margin-bottom: 8px;">12 Ô Skill (Không dùng Mana - Cooldown)</div>
+                    <div class="skill-grid">
+                        <div class="skill-slot equipped" data-skill="0" title="Chém Mạnh - CD: 3s">⚔️</div>
+                        <div class="skill-slot equipped" data-skill="1" title="Phòng Thủ - CD: 5s">🛡️</div>
+                        <div class="skill-slot equipped" data-skill="2" title="Hồi Máu - CD: 10s">💚</div>
+                        <div class="skill-slot equipped" data-skill="3" title="Tăng Tốc - CD: 8s">⚡</div>
+                        <div class="skill-slot equipped" data-skill="4" title="Chí Mạng - CD: 12s">💥</div>
+                        <div class="skill-slot equipped" data-skill="5" title="Phản Damage - CD: 15s">🔄</div>
+                        <div class="skill-slot" data-skill="6">➕</div>
+                        <div class="skill-slot" data-skill="7">➕</div>
+                        <div class="skill-slot" data-skill="8">➕</div>
+                        <div class="skill-slot" data-skill="9">➕</div>
+                        <div class="skill-slot" data-skill="10">➕</div>
+                        <div class="skill-slot" data-skill="11">➕</div>
+                    </div>
+                </div>
+                
+                <!-- Skill Gems -->
+                <div style="background: rgba(138, 43, 226, 0.2); border: 2px solid #8a2be2; border-radius: 8px; padding: 10px;">
+                    <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: #8a2be2;">💎 Ngọc Kỹ Năng</div>
+                    <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+                        <div style="background: rgba(255,0,0,0.3); padding: 5px; border-radius: 5px; font-size: 10px;">🔴 Máu +500</div>
+                        <div style="background: rgba(255,165,0,0.3); padding: 5px; border-radius: 5px; font-size: 10px;">🟠 Phản +20%</div>
+                        <div style="background: rgba(255,215,0,0.3); padding: 5px; border-radius: 5px; font-size: 10px;">🟡 Crit +15%</div>
+                        <div style="background: rgba(0,255,0,0.3); padding: 5px; border-radius: 5px; font-size: 10px;">🟢 Tốc +30</div>
                     </div>
                 </div>
             </div>
@@ -1205,899 +1277,1429 @@
             <div class="panel-section">
                 <div class="section-title">⚔️ Đấu Trường</div>
                 <div class="arena-panel">
-                    <div style="color: #dc143c; font-size: 16px; font-weight: bold; margin-bottom: 10px;">
-                        🏆 PvP Arena
+                    <div style="font-size: 12px; margin-bottom: 10px;">
+                        <div>🏆 Rank: <span style="color: #ffd700;">Diamond III</span></div>
+                        <div>📊 Thắng/Thua: <span style="color: #4caf50;">24</span>/<span style="color: #f44336;">8</span></div>
+                        <div>🎖️ Điểm Arena: <span style="color: #ff9800;">2847</span></div>
                     </div>
-                    <div class="arena-modes">
-                        <div class="arena-mode" onclick="joinArena('solo')">
-                            🤺 Solo<br>
-                            <small>1v1 Combat</small>
-                        </div>
-                        <div class="arena-mode" onclick="joinArena('clan')">
-                            👥 Clan War<br>
-                            <small>5v5 Battle</small>
-                        </div>
-                    </div>
-                    <div style="font-size: 11px; color: #ccc; margin-top: 8px; text-align: center;">
-                        🛡️ Shield hồi sinh: Clan tại làng, không clan tại thảo nguyên
-                    </div>
-                </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="action-buttons">
-                <button class="action-btn mine" onclick="startMining()" id="mineBtn">
-                    ⛏️ Đào Đá
-                </button>
-                <button class="action-btn" onclick="openDragonSummoning()" id="dragonBtn">
-                    🐉 Triệu Hồi
-                </button>
-                <button class="action-btn" onclick="openSecretRealm()" id="realmBtn" disabled>
-                    🌟 Bí Cảnh
-                </button>
-            </div>
-
-            <!-- Chat System -->
-            <div class="chat-window" id="chatWindow">
-                <div class="chat-message system">🎮 Chào mừng đến với DreamBooks!</div>
-                <div class="chat-message world">🌍 [World] Player123: Ai muốn party không?</div>
-                <div class="chat-message clan">🏰 [Clan] GuildMaster: Tối nay clan war với BlackDragons!</div>
-                <div class="chat-message pk">⚔️ [PK] DragonSlayer đã tiêu diệt DarkMage tại Vùng Lửa!</div>
-                <div class="chat-message system">💎 Bạn đã tìm thấy Ngọc Rồng 5 sao!</div>
-                <div class="chat-message world">🌍 [World] MagicGirl: Bán sword +10, pm giá!</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal System -->
-    <div class="modal" id="gameModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button class="close-btn" onclick="closeModal()">&times;</button>
-                <span id="modalTitle">Modal Title</span>
-            </div>
-            <div id="modalBody">Modal Content</div>
-        </div>
-    </div>
-
-    <script>
-        // Game State
-        const gameState = {
-            player: {
-                name: 'DragonSlayer',
-                level: 1,
-                hp: 1000,
-                maxHp: 1000,
-                attack: 150,
-                defense: 80,
-                speed: 100,
-                crit: 25,
-                dodge: 15,
-                exp: 650,
-                expToNext: 1000,
-                gold: 1000,
-                diamonds: 50,
-                x: 2000,
-                y: 1400,
-                
-                // Skin & Transformation
-                currentSkin: 'default',
-                transformLevel: 0, // 0, 1, 2
-                skinStats: {
-                    default: { hp: 0, attack: 0, speed: 0 },
-                    warrior: { hp: 100, attack: 50, speed: -10 },
-                    mage: { hp: -50, attack: 30, speed: 20 },
-                    assassin: { hp: -20, attack: 40, speed: 30 }
-                },
-                
-                // Gem Sockets
-                characterGems: new Array(12).fill(null),
-                equipmentGems: new Array(8).fill(null),
-                
-                // Equipment
-                equipment: {
-                    helmet: { name: 'Dragon Helm', level: 5, gems: new Array(8).fill(null) },
-                    armor: { name: 'Fire Armor', level: 7, gems: new Array(8).fill(null) },
-                    weapon: { name: 'Legendary Sword', level: 8, gems: new Array(8).fill(null) },
-                    boots: { name: 'Speed Boots', level: 3, gems: new Array(8).fill(null) },
-                    cloak: { name: 'Shadow Cloak', level: 4, gems: new Array(8).fill(null) },
-                    accessory: null
-                },
-                
-                // Skills & Cooldowns
-                skills: [
-                    { name: 'Chém Ngang', cooldown: 2000, lastUsed: 0, active: true },
-                    { name: 'Lửa Cầu', cooldown: 5000, lastUsed: 0, active: false },
-                    { name: 'Hồi Máu', cooldown: 10000, lastUsed: 0, active: true },
-                    { name: 'Phản Sát Thương', cooldown: 15000, lastUsed: 0, active: false },
-                    { name: 'Tốc Độ', cooldown: 8000, lastUsed: 0, active: true },
-                    { name: 'Chí Mạng', cooldown: 12000, lastUsed: 0, active: false },
-                    { name: 'AOE Attack', cooldown: 20000, lastUsed: 0, active: false },
-                    { name: 'Stealth', cooldown: 25000, lastUsed: 0, active: false },
-                    { name: 'Shield', cooldown: 30000, lastUsed: 0, active: false },
-                    { name: 'Ultimate', cooldown: 60000, lastUsed: 0, active: false },
-                    { name: 'Teleport', cooldown: 15000, lastUsed: 0, active: false },
-                    { name: 'Dragon Call', cooldown: 120000, lastUsed: 0, active: false }
-                ],
-                
-                // Current Zone
-                currentZone: 'safe',
-                
-                // Dragon summoning
-                dragonStones: [0, 0, 0, 0, 0, 0, 0], // 1-7 star stones
-                
-                // Clan
-                clan: {
-                    name: 'DragonLords',
-                    level: 7,
-                    members: 48,
-                    maxMembers: 50,
-                    onlineMembers: 32,
-                    contribution: 2450,
-                    buildings: {
-                        tower: 5,
-                        warehouse: 3,
-                        equipment: 4,
-                        blacksmith: 0,
-                        altar: 0,
-                        training: 0
-                    }
-                }
-            },
-            
-            pets: [
-                {
-                    id: 0,
-                    name: 'Shadow Wolf',
-                    icon: '🐺',
-                    level: 5,
-                    exp: 750,
-                    expToNext: 1000,
-                    hp: 500,
-                    maxHp: 500,
-                    attack: 80,
-                    transformLevel: 0,
-                    gems: new Array(12).fill(null),
-                    active: true
-                },
-                {
-                    id: 1,
-                    name: 'Fire Dragon',
-                    icon: '🐉',
-                    level: 3,
-                    exp: 300,
-                    expToNext: 600,
-                    hp: 300,
-                    maxHp: 300,
-                    attack: 120,
-                    transformLevel: 0,
-                    gems: new Array(12).fill(null),
-                    active: false
-                },
-                {
-                    id: 2,
-                    name: 'Storm Eagle',
-                    icon: '🦅',
-                    level: 7,
-                    exp: 900,
-                    expToNext: 1400,
-                    hp: 400,
-                    maxHp: 400,
-                    attack: 90,
-                    transformLevel: 0,
-                    gems: new Array(12).fill(null),
-                    active: false
-                }
-            ],
-            
-            world: {
-                currentZone: 'safe',
-                offsetX: 0,
-                offsetY: 0,
-                miningTiles: [],
-                campfires: [],
-                players: [], // Other players for multiplayer
-                robotFusion: {
-                    playersNear: 2,
-                    requiredPlayers: 5,
-                    active: false,
-                    timeLeft: 300000 // 5 minutes
-                }
-            },
-            
-            ui: {
-                selectedPet: 0,
-                isTransformed: false,
-                isPetTransformed: false,
-                isMining: false,
-                showMinimap: true
-            }
-        };
-
-        // Gem Database
-        const gemDatabase = {
-            hp: { name: 'Ngọc Máu', icon: '❤️', color: '#ff4444', stats: { hp: 100 } },
-            attack: { name: 'Ngọc Tấn Công', icon: '💠', color: '#4444ff', stats: { attack: 25 } },
-            defense: { name: 'Ngọc Phòng Thủ', icon: '💚', color: '#44ff44', stats: { defense: 20 } },
-            speed: { name: 'Ngọc Tốc Độ', icon: '💛', color: '#ffff44', stats: { speed: 15 } },
-            crit: { name: 'Ngọc Chí Mạng', icon: '🧡', color: '#ff8844', stats: { crit: 10 } },
-            dodge: { name: 'Ngọc Né Tránh', icon: '🤍', color: '#ffffff', stats: { dodge: 8 } },
-            reflect: { name: 'Ngọc Phản', icon: '💜', color: '#8844ff', stats: { reflect: 15 } },
-            rare_dragon: { name: 'Ngọc Rồng', icon: '🔮', color: '#ff00ff', stats: { hp: 200, attack: 50 } }
-        };
-
-        // Zone Configurations
-        const zoneConfigs = {
-            safe: {
-                name: 'Thảo Nguyên An Toàn',
-                pkEnabled: false,
-                dropItems: false,
-                background: 'linear-gradient(45deg, #2d5016, #4a7c59, #2d5016)'
-            },
-            ice: {
-                name: 'Vùng Băng Giá',
-                pkEnabled: true,
-                dropItems: true,
-                background: 'linear-gradient(45deg, #add8e6, #87ceeb, #b0e0e6)'
-            },
-            fire: {
-                name: 'Vùng Lửa',
-                pkEnabled: true,
-                dropItems: true,
-                background: 'linear-gradient(45deg, #ff4500, #ff6347, #ff8c00)'
-            },
-            cemetery: {
-                name: 'Nghĩa Địa',
-                pkEnabled: true,
-                dropItems: true,
-                background: 'linear-gradient(45deg, #4b0082, #8b4513, #2f4f4f)'
-            }
-        };
-
-        // Initialize Game
-        function initGame() {
-            console.log('🐉 Khởi tạo DreamBooks...');
-            showLoadingScreen();
-            
-            setTimeout(() => {
-                hideLoadingScreen();
-                startGame();
-            }, 3000);
-        }
-
-        function showLoadingScreen() {
-            const loadingScreen = document.getElementById('loadingScreen');
-            const progressBar = document.getElementById('loadingProgress');
-            const loadingText = document.getElementById('loadingText');
-            
-            const loadingSteps = [
-                'Đang tải skin system...',
-                'Khởi tạo pet system...',
-                'Chuẩn bị gem sockets...',
-                'Tạo thế giới game...',
-                'Kết nối clan system...',
-                'Hoàn tất!'
-            ];
-            
-            let currentStep = 0;
-            const loadingInterval = setInterval(() => {
-                if (currentStep < loadingSteps.length) {
-                    loadingText.textContent = loadingSteps[currentStep];
-                    progressBar.style.width = ((currentStep + 1) / loadingSteps.length * 100) + '%';
-                    currentStep++;
-                } else {
-                    clearInterval(loadingInterval);
-                }
-            }, 500);
-        }
-
-        function hideLoadingScreen() {
-            document.getElementById('loadingScreen').style.display = 'none';
-        }
-
-        function startGame() {
-            document.getElementById('gameContainer').style.display = 'flex';
-            
-            // Initialize game systems
-            generateMiningTiles();
-            updatePlayerPosition();
-            updateCamera();
-            updateMinimap();
-            updateUI();
-            updateSkillCooldowns();
-            
-            // Start game loop
-            gameLoop();
-            
-            addChatMessage('system', '🎮 Chào mừng đến với DreamBooks! Thế giới MMORPG đầy màu sắc!');
-            showNotification('Chào mừng đến DreamBooks! 🐉', 'success');
-        }
-
-        // Skin System
-        function selectSkin(skinType) {
-            if (skinType !== 'default' && gameState.player.diamonds < 100) {
-                showNotification('Không đủ kim cương để mua skin!', 'error');
-                return;
-            }
-            
-            if (skinType !== 'default' && skinType !== gameState.player.currentSkin) {
-                gameState.player.diamonds -= 100;
-                addChatMessage('system', `💎 Đã mua skin ${skinType}! Tốn 100 kim cương.`);
-            }
-            
-            // Remove old skin effects
-            const oldSkinStats = gameState.player.skinStats[gameState.player.currentSkin];
-            gameState.player.hp -= oldSkinStats.hp;
-            gameState.player.maxHp -= oldSkinStats.hp;
-            gameState.player.attack -= oldSkinStats.attack;
-            gameState.player.speed -= oldSkinStats.speed;
-            
-            // Apply new skin
-            gameState.player.currentSkin = skinType;
-            const newSkinStats = gameState.player.skinStats[skinType];
-            gameState.player.hp += newSkinStats.hp;
-            gameState.player.maxHp += newSkinStats.hp;
-            gameState.player.attack += newSkinStats.attack;
-            gameState.player.speed += newSkinStats.speed;
-            
-            // Update UI
-            document.querySelectorAll('.skin-option').forEach(option => {
-                option.classList.remove('selected');
-            });
-            document.querySelector(`[data-skin="${skinType}"]`).classList.add('selected');
-            
-            // Update player appearance
-            const skinIcons = {
-                default: '🧙‍♂️',
-                warrior: '⚔️',
-                mage: '🔮',
-                assassin: '🥷'
-            };
-            
-            document.getElementById('player').textContent = skinIcons[skinType];
-            document.getElementById('playerIcon').textContent = skinIcons[skinType];
-            
-            updateUI();
-            showNotification(`Đã chọn skin ${skinType}! ✨`, 'success');
-        }
-
-        // Transformation System
-        function transformPlayer() {
-            const maxLevel = 2;
-            if (gameState.player.transformLevel >= maxLevel) {
-                showNotification('Đã đạt dạng hóa hình tối đa!', 'warning');
-                return;
-            }
-            
-            const cost = (gameState.player.transformLevel + 1) * 50;
-            if (gameState.player.diamonds < cost) {
-                showNotification(`Cần ${cost} kim cương để hóa hình!`, 'error');
-                return;
-            }
-            
-            gameState.player.diamonds -= cost;
-            gameState.player.transformLevel++;
-            
-            // Boost stats
-            const boost = 1.2 + (gameState.player.transformLevel * 0.3);
-            gameState.player.hp = Math.floor(gameState.player.hp * boost);
-            gameState.player.maxHp = Math.floor(gameState.player.maxHp * boost);
-            gameState.player.attack = Math.floor(gameState.player.attack * boost);
-            gameState.player.speed = Math.floor(gameState.player.speed * boost);
-            
-            // Update appearance
-            const player = document.getElementById('player');
-            if (gameState.player.transformLevel === maxLevel) {
-                player.classList.add('transformed');
-                document.getElementById('transformBtn').textContent = '⭐ Dạng Tối Thượng';
-                document.getElementById('transformBtn').disabled = true;
-            } else {
-                document.getElementById('transformBtn').textContent = `✨ Hóa Hình Dạng ${gameState.player.transformLevel + 1}`;
-            }
-            
-            updateUI();
-            addChatMessage('system', `🌟 Hóa hình thành công! Dạng ${gameState.player.transformLevel}`);
-            showNotification(`Hóa hình dạng ${gameState.player.transformLevel}! 🌟`, 'success');
-        }
-
-        // Pet System
-        function selectPet(petId) {
-            // Deactivate current pet
-            gameState.pets.forEach(pet => pet.active = false);
-            
-            // Activate selected pet
-            gameState.pets[petId].active = true;
-            gameState.ui.selectedPet = petId;
-            
-            // Update UI
-            document.querySelectorAll('.pet-slot').forEach(slot => {
-                slot.classList.remove('active');
-            });
-            document.querySelectorAll('.pet-slot')[petId].classList.add('active');
-            
-            // Update pet appearance in world
-            const pet = document.getElementById('pet');
-            pet.textContent = gameState.pets[petId].icon;
-            
-            addChatMessage('system', `🐾 Đã chọn pet: ${gameState.pets[petId].name}`);
-            showNotification(`Pet hoạt động: ${gameState.pets[petId].name}! 🐾`, 'success');
-        }
-
-        function transformPet() {
-            const activePet = gameState.pets[gameState.ui.selectedPet];
-            const maxLevel = 2;
-            
-            if (activePet.transformLevel >= maxLevel) {
-                showNotification('Pet đã đạt dạng hóa hình tối đa!', 'warning');
-                return;
-            }
-            
-            const cost = (activePet.transformLevel + 1) * 30;
-            if (gameState.player.diamonds < cost) {
-                showNotification(`Cần ${cost} kim cương để hóa hình pet!`, 'error');
-                return;
-            }
-            
-            gameState.player.diamonds -= cost;
-            activePet.transformLevel++;
-            
-            // Boost pet stats
-            const boost = 1.3 + (activePet.transformLevel * 0.4);
-            activePet.hp = Math.floor(activePet.hp * boost);
-            activePet.maxHp = Math.floor(activePet.maxHp * boost);
-            activePet.attack = Math.floor(activePet.attack * boost);
-            
-            // Update appearance
-            const pet = document.getElementById('pet');
-            if (activePet.transformLevel === maxLevel) {
-                pet.classList.add('transformed');
-                document.getElementById('petTransformBtn').textContent = '⭐ Pet Tối Thượng';
-                document.getElementById('petTransformBtn').disabled = true;
-            } else {
-                document.getElementById('petTransformBtn').textContent = `🔥 Hóa Hình Pet Dạng ${activePet.transformLevel + 1}`;
-            }
-            
-            updateUI();
-            addChatMessage('system', `🌟 Pet hóa hình thành công! Dạng ${activePet.transformLevel}`);
-            showNotification(`Pet hóa hình dạng ${activePet.transformLevel}! 🌟`, 'success');
-        }
-
-        // Robot Fusion System
-        function attemptRobotFusion() {
-            if (gameState.world.robotFusion.playersNear < gameState.world.robotFusion.requiredPlayers) {
-                showNotification(`Cần ${gameState.world.robotFusion.requiredPlayers} người có thú đặc biệt!`, 'warning');
-                return;
-            }
-            
-            // Create robot
-            gameState.world.robotFusion.active = true;
-            gameState.world.robotFusion.timeLeft = 300000; // 5 minutes
-            
-            // Spawn robot in world
-            const robot = document.createElement('div');
-            robot.className = 'robot';
-            robot.id = 'fusionRobot';
-            robot.style.left = (gameState.player.x + 50) + 'px';
-            robot.style.top = (gameState.player.y - 50) + 'px';
-            robot.textContent = '🤖';
-            robot.title = 'Fusion Robot - 5:00 remaining';
-            
-            document.getElementById('worldMap').appendChild(robot);
-            
-            // Start robot timer
-            startRobotTimer();
-            
-            addChatMessage('system', '🤖 Hợp thể Robot thành công! Thời gian: 5 phút');
-            showNotification('Robot Fusion thành công! 🤖', 'success');
-        }
-
-        function startRobotTimer() {
-            const robotTimer = setInterval(() => {
-                gameState.world.robotFusion.timeLeft -= 1000;
-                
-                if (gameState.world.robotFusion.timeLeft <= 0) {
-                    // Robot disappears
-                    const robot = document.getElementById('fusionRobot');
-                    if (robot) robot.remove();
-                    
-                    gameState.world.robotFusion.active = false;
-                    clearInterval(robotTimer);
-                    
-                    addChatMessage('system', '🤖 Robot đã biến mất!');
-                    showNotification('Robot Fusion kết thúc!', 'warning');
-                } else {
-                    // Update robot title
-                    const robot = document.getElementById('fusionRobot');
-                    if (robot) {
-                        const minutes = Math.floor(gameState.world.robotFusion.timeLeft / 60000);
-                        const seconds = Math.floor((gameState.world.robotFusion.timeLeft % 60000) / 1000);
-                        robot.title = `Fusion Robot - ${minutes}:${seconds.toString().padStart(2, '0')} remaining`;
-                    }
-                }
-            }, 1000);
-        }
-
-        // Gem Socket System
-        function openGemSocket(socketIndex) {
-            const currentGem = gameState.player.characterGems[socketIndex];
-            
-            let modalContent = `
-                <div class="gem-enhancement">
-                    <div class="gem-list">
-                        <h3>Chọn Ngọc</h3>
-                        ${Object.keys(gemDatabase).map(gemType => `
-                            <div class="gem-item" onclick="selectGem('${gemType}', ${socketIndex}, 'character')">
-                                <span style="font-size: 20px;">${gemDatabase[gemType].icon}</span>
-                                <div>
-                                    <div style="font-weight: bold;">${gemDatabase[gemType].name}</div>
-                                    <div style="font-size: 11px; color: #ccc;">
-                                        ${Object.entries(gemDatabase[gemType].stats).map(([stat, value]) => `${stat}: +${value}`).join(', ')}
-                                    </div>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                    <div class="gem-preview">
-                        <h3>Xem Trước</h3>
-                        <div style="font-size: 40px; margin: 20px 0;">
-                            ${currentGem ? gemDatabase[currentGem].icon : '⚫'}
-                        </div>
-                        <div>${currentGem ? gemDatabase[currentGem].name : 'Trống'}</div>
-                        <div class="success-chance">
-                            <div>Tỷ lệ thành công: <strong>85%</strong></div>
-                            <div style="margin-top: 5px; font-size: 12px;">Chi phí: 1000 vàng</div>
-                        </div>
-                    </div>
-                    <div style="text-align: center;">
-                        <button class="action-btn" onclick="enhanceGem(${socketIndex}, 'character')" style="margin-top: 20px;">
-                            💎 Khảm Ngọc
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <button class="arena-queue-btn" onclick="queueArena('solo')" style="font-size: 11px;">
+                            🥊 Solo Queue
+                        </button>
+                        <button class="arena-queue-btn" onclick="queueArena('clan')" style="font-size: 11px;">
+                            👥 Clan War
                         </button>
                     </div>
-                </div>
-            `;
-            
-            showModal('💎 Khảm Ngọc Nhân Vật', modalContent);
-        }
-
-        function openPetGemSocket(socketIndex) {
-            const activePet = gameState.pets[gameState.ui.selectedPet];
-            const currentGem = activePet.gems[socketIndex];
-            
-            let modalContent = `
-                <div class="gem-enhancement">
-                    <div class="gem-list">
-                        <h3>Chọn Ngọc Pet</h3>
-                        ${Object.keys(gemDatabase).map(gemType => `
-                            <div class="gem-item" onclick="selectGem('${gemType}', ${socketIndex}, 'pet')">
-                                <span style="font-size: 20px;">${gemDatabase[gemType].icon}</span>
-                                <div>
-                                    <div style="font-weight: bold;">${gemDatabase[gemType].name}</div>
-                                    <div style="font-size: 11px; color: #ccc;">
-                                        ${Object.entries(gemDatabase[gemType].stats).map(([stat, value]) => `${stat}: +${value}`).join(', ')}
-                                    </div>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                    <div class="gem-preview">
-                        <h3>Xem Trước Pet</h3>
-                        <div style="font-size: 40px; margin: 20px 0;">
-                            ${currentGem ? gemDatabase[currentGem].icon : '⚫'}
-                        </div>
-                        <div>${currentGem ? gemDatabase[currentGem].name : 'Trống'}</div>
-                        <div class="success-chance">
-                            <div>Tỷ lệ thành công: <strong>80%</strong></div>
-                            <div style="margin-top: 5px; font-size: 12px;">Chi phí: 1500 vàng</div>
-                        </div>
-                    </div>
-                    <div style="text-align: center;">
-                        <button class="action-btn" onclick="enhanceGem(${socketIndex}, 'pet')" style="margin-top: 20px;">
-                            💎 Khảm Ngọc Pet
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            showModal('💎 Khảm Ngọc Pet', modalContent);
-        }
-
-        function openEquipGemSocket(socketIndex) {
-            const currentGem = gameState.player.equipmentGems[socketIndex];
-            
-            let modalContent = `
-                <div class="gem-enhancement">
-                    <div class="gem-list">
-                        <h3>Chọn Ngọc Trang Bị</h3>
-                        ${Object.keys(gemDatabase).map(gemType => `
-                            <div class="gem-item" onclick="selectGem('${gemType}', ${socketIndex}, 'equipment')">
-                                <span style="font-size: 20px;">${gemDatabase[gemType].icon}</span>
-                                <div>
-                                    <div style="font-weight: bold;">${gemDatabase[gemType].name}</div>
-                                    <div style="font-size: 11px; color: #ccc;">
-                                        ${Object.entries(gemDatabase[gemType].stats).map(([stat, value]) => `${stat}: +${value}`).join(', ')}
-                                    </div>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                    <div class="gem-preview">
-                        <h3>Xem Trước Trang Bị</h3>
-                        <div style="font-size: 40px; margin: 20px 0;">
-                            ${currentGem ? gemDatabase[currentGem].icon : '⚫'}
-                        </div>
-                        <div>${currentGem ? gemDatabase[currentGem].name : 'Trống'}</div>
-                        <div class="success-chance">
-                            <div>Tỷ lệ thành công: <strong>70%</strong></div>
-                            <div style="margin-top: 5px; font-size: 12px;">Chi phí: 2000 vàng</div>
-                            <div style="margin-top: 5px; font-size: 11px; color: #ffa500;">
-                                Thành công có 15% chance hóa hình trang bị!
-                            </div>
-                        </div>
-                    </div>
-                    <div style="text-align: center;">
-                        <button class="action-btn" onclick="enhanceGem(${socketIndex}, 'equipment')" style="margin-top: 20px;">
-                            💎 Khảm Ngọc Trang Bị
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            showModal('💎 Khảm Ngọc Trang Bị', modalContent);
-        
-                </div>
-            </div>
-            
-            <!-- Character Stats -->
-            <div class="panel-section">
-                <div class="section-title">📊 Thông Số Nhân Vật</div>
-                <div class="character-stats">
-                    <div class="stat-item">
-                        <div class="stat-value" id="playerHp">1000</div>
-                        <div class="stat-label">Máu</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="playerAttack">150</div>
-                        <div class="stat-label">Tấn Công</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="playerSpeed">100</div>
-                        <div class="stat-label">Tốc Chạy</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="playerDefense">80</div>
-                        <div class="stat-label">Phòng Thủ</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="playerCrit">25%</div>
-                        <div class="stat-label">Chí Mạng</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="playerDodge">15%</div>
-                        <div class="stat-label">Né Tránh</div>
-                    </div>
-                </div>
-                
-                <!-- Health Bar -->
-                <div class="progress-bar">
-                    <div class="progress-fill health-fill" id="healthBar" style="width: 100%"></div>
-                </div>
-                <div style="font-size: 12px; text-align: center; margin-top: 3px; color: #ccc;">
-                    HP: <span id="currentHp">1000</span>/<span id="maxHp">1000</span>
-                </div>
-                
-                <!-- EXP Bar -->
-                <div class="progress-bar">
-                    <div class="progress-fill exp-fill" id="expBar" style="width: 65%"></div>
-                </div>
-                <div style="font-size: 12px; text-align: center; margin-top: 3px; color: #ccc;">
-                    EXP: <span id="currentExp">650</span>/<span id="expToNext">1000</span>
-                </div>
-            </div>
-
-            <!-- Skin System -->
-            <div class="panel-section">
-                <div class="section-title">👤 Skin & Hóa Hình</div>
-                <div class="skin-selector">
-                    <div class="skin-option selected" data-skin="default" onclick="selectSkin('default')">
-                        🧙‍♂️
-                    </div>
-                    <div class="skin-option" data-skin="warrior" onclick="selectSkin('warrior')">
-                        ⚔️
-                        <div class="skin-price">💎</div>
-                    </div>
-                    <div class="skin-option" data-skin="mage" onclick="selectSkin('mage')">
-                        🔮
-                        <div class="skin-price">💎</div>
-                    </div>
-                    <div class="skin-option" data-skin="assassin" onclick="selectSkin('assassin')">
-                        🥷
-                        <div class="skin-price">💎</div>
-                    </div>
-                </div>
-                
-                <div style="margin: 10px 0; text-align: center;">
-                    <button class="action-btn transform" onclick="transformPlayer()" id="transformBtn">
-                        ✨ Hóa Hình Dạng 1
-                    </button>
-                </div>
-                
-                <!-- Gem Sockets for Character -->
-                <div style="font-size: 14px; margin-bottom: 8px; color: #ff6b35;">💎 Khảm Ngọc Nhân Vật (8/12)</div>
-                <div class="gem-sockets">
-                    <div class="gem-socket filled" onclick="openGemSocket(0)">💠</div>
-                    <div class="gem-socket filled rare" onclick="openGemSocket(1)">💜</div>
-                    <div class="gem-socket filled" onclick="openGemSocket(2)">💚</div>
-                    <div class="gem-socket filled" onclick="openGemSocket(3)">❤️</div>
-                    <div class="gem-socket filled" onclick="openGemSocket(4)">💛</div>
-                    <div class="gem-socket filled" onclick="openGemSocket(5)">🤍</div>
-                    <div class="gem-socket filled" onclick="openGemSocket(6)">🧡</div>
-                    <div class="gem-socket filled" onclick="openGemSocket(7)">💙</div>
-                    <div class="gem-socket" onclick="openGemSocket(8)">⚫</div>
-                    <div class="gem-socket" onclick="openGemSocket(9)">⚫</div>
-                    <div class="gem-socket" onclick="openGemSocket(10)">⚫</div>
-                    <div class="gem-socket" onclick="openGemSocket(11)">⚫</div>
-                </div>
-            </div>
-
-            <!-- Pet System -->
-            <div class="panel-section">
-                <div class="section-title">🐾 Pet & Thú Cưỡi</div>
-                <div class="pet-grid">
-                    <div class="pet-slot active" onclick="selectPet(0)">
-                        <div class="pet-icon">🐺</div>
-                        <div class="pet-level">5</div>
-                        <div style="font-size: 11px;">Shadow Wolf</div>
-                        <div class="progress-bar" style="margin-top: 5px; height: 6px;">
-                            <div class="progress-fill pet-exp-fill" style="width: 75%"></div>
-                        </div>
-                    </div>
-                    <div class="pet-slot" onclick="selectPet(1)">
-                        <div class="pet-icon">🐉</div>
-                        <div class="pet-level">3</div>
-                        <div style="font-size: 11px;">Fire Dragon</div>
-                        <div class="progress-bar" style="margin-top: 5px; height: 6px;">
-                            <div class="progress-fill pet-exp-fill" style="width: 30%"></div>
-                        </div>
-                    </div>
-                    <div class="pet-slot" onclick="selectPet(2)">
-                        <div class="pet-icon">🦅</div>
-                        <div class="pet-level">7</div>
-                        <div style="font-size: 11px;">Storm Eagle</div>
-                        <div class="progress-bar" style="margin-top: 5px; height: 6px;">
-                            <div class="progress-fill pet-exp-fill" style="width: 90%"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div style="margin: 10px 0;">
-                    <button class="action-btn transform" onclick="transformPet()" id="petTransformBtn">
-                        🔥 Hóa Hình Pet Dạng 2
-                    </button>
-                </div>
-                
-                <!-- Pet Gem Sockets -->
-                <div style="font-size: 14px; margin: 10px 0 8px 0; color: #ff6b35;">💎 Khảm Ngọc Pet (6/12)</div>
-                <div class="gem-sockets">
-                    <div class="gem-socket filled" onclick="openPetGemSocket(0)">💠</div>
-                    <div class="gem-socket filled" onclick="openPetGemSocket(1)">💚</div>
-                    <div class="gem-socket filled" onclick="openPetGemSocket(2)">❤️</div>
-                    <div class="gem-socket filled" onclick="openPetGemSocket(3)">💛</div>
-                    <div class="gem-socket filled" onclick="openPetGemSocket(4)">🤍</div>
-                    <div class="gem-socket filled" onclick="openPetGemSocket(5)">🧡</div>
-                    <div class="gem-socket" onclick="openPetGemSocket(6)">⚫</div>
-                    <div class="gem-socket" onclick="openPetGemSocket(7)">⚫</div>
-                    <div class="gem-socket" onclick="openPetGemSocket(8)">⚫</div>
-                    <div class="gem-socket" onclick="openPetGemSocket(9)">⚫</div>
-                    <div class="gem-socket" onclick="openPetGemSocket(10)">⚫</div>
-                    <div class="gem-socket" onclick="openPetGemSocket(11)">⚫</div>
-                </div>
-                
-                <!-- Robot Fusion -->
-                <div style="margin: 15px 0; padding: 10px; background: rgba(156, 39, 176, 0.2); border: 2px solid #9c27b0; border-radius: 8px;">
-                    <div style="font-size: 14px; font-weight: bold; color: #9c27b0; margin-bottom: 8px;">🤖 Hợp Thể Robot</div>
-                    <div style="font-size: 11px; color: #ccc; margin-bottom: 8px;">Cần 5 người có thú đặc biệt ở gần</div>
-                    <button class="action-btn" onclick="attemptRobotFusion()" id="robotFusionBtn" disabled>
-                        🤖 Hợp Thể (2/5)
-                    </button>
-                </div>
-            </div>
-
-            <!-- Equipment System -->
-            <div class="panel-section">
-                <div class="section-title">⚔️ Trang Bị</div>
-                <div class="equipment-grid">
-                    <div class="equipment-slot equipped" onclick="openEquipment('helmet')">
-                        ⛑️
-                        <div class="equipment-level">+5</div>
-                    </div>
-                    <div class="equipment-slot equipped" onclick="openEquipment('armor')">
-                        🦺
-                        <div class="equipment-level">+7</div>
-                    </div>
-                    <div class="equipment-slot equipped" onclick="openEquipment('boots')">
-                        👢
-                        <div class="equipment-level">+3</div>
-                    </div>
-                    <div class="equipment-slot equipped" onclick="openEquipment('cloak')">
-                        🧥
-                        <div class="equipment-level">+4</div>
-                    </div>
-                    <div class="equipment-slot equipped" onclick="openEquipment('weapon')">
-                        ⚔️
-                        <div class="equipment-level">+8</div>
-                    </div>
-                    <div class="equipment-slot" onclick="openEquipment('accessory')">
-                        💍
-                    </div>
-                </div>
-                
-                <!-- Equipment Gem Sockets -->
-                <div style="font-size: 14px; margin: 10px 0 8px 0; color: #ff6b35;">💎 Khảm Ngọc Trang Bị (5/8)</div>
-                <div class="gem-sockets" style="grid-template-columns: repeat(4, 1fr);">
-                    <div class="gem-socket filled" onclick="openEquipGemSocket(0)">💠</div>
-                    <div class="gem-socket filled" onclick="openEquipGemSocket(1)">💚</div>
-                    <div class="gem-socket filled rare" onclick="openEquipGemSocket(2)">💜</div>
-                    <div class="gem-socket filled" onclick="openEquipGemSocket(3)">❤️</div>
-                    <div class="gem-socket filled" onclick="openEquipGemSocket(4)">💛</div>
-                    <div class="gem-socket" onclick="openEquipGemSocket(5)">⚫</div>
-                    <div class="gem-socket" onclick="openEquipGemSocket(6)">⚫</div>
-                    <div class="gem-socket" onclick="openEquipGemSocket(7)">⚫</div>
-                </div>
-            </div>
-
-            <!-- Skills System -->
-            <div class="panel-section">
-                <div class="section-title">🎯 Kỹ Năng (Không Mana)</div>
-                <div class="skills-grid">
-                    <div class="skill-slot active" onclick="useSkill(0)" title="Chém Ngang - Cooldown: 2s">⚔️</div>
-                    <div class="skill-slot" onclick="useSkill(1)" title="Lửa Cầu - Cooldown: 5s">🔥</div>
-                    <div class="skill-slot active" onclick="useSkill(2)" title="Hồi Máu - Cooldown: 10s">💚</div>
-                    <div class="skill-slot" onclick="useSkill(3)" title="Phản Sát Thương - Cooldown: 15s">🛡️</div>
-                    <div class="skill-slot active" onclick="useSkill(4)" title="Tốc Độ - Cooldown: 8s">⚡</div>
-                    <div class="skill-slot" onclick="useSkill(5)" title="Chí Mạng - Cooldown: 12s">💥</div>
-                    <div class="skill-slot" onclick="useSkill(6)" title="AOE Attack - Cooldown: 20s">🌪️</div>
-                    <div class="skill-slot" onclick="useSkill(7)" title="Stealth - Cooldown: 25s">👻</div>
-                    <div class="skill-slot" onclick="useSkill(8)" title="Shield - Cooldown: 30s">🔰</div>
-                    <div class="skill-slot" onclick="useSkill(9)" title="Ultimate - Cooldown: 60s">⭐</div>
-                    <div class="skill-slot" onclick="useSkill(10)" title="Teleport - Cooldown: 15s">✨</div>
-                    <div class="skill-slot" onclick="useSkill(11)" title="Dragon Call - Cooldown: 120s">🐉</div>
-                </div>
-                
-                <div style="font-size: 12px; color: #ccc; margin-top: 8px;">
-                    💡 Tip: Skill đơn hiệu quả cao, đa mục tiêu hiệu quả thấp hơn
                 </div>
             </div>
 
             <!-- Clan System -->
             <div class="panel-section">
-                <div class="section-title">🏰 Làng Clan</div>
-                <div class="clan-panel">
-                    <div class="clan-header">
-                        <span>🏰</span>
-                        <span>DragonLords</span>
-                        <span style="margin-left: auto; font-size: 14px;">Lv.7</span>
-                    </div>
-                    <div style="font-size: 12px; color: #ccc; margin-bottom: 10px;">
-                        Thành viên: 48/50 | Online: 32 | Cống hiến: 2,450
+                <div class="section-title">🏰 Hệ Thống Clan</div>
+                <div class="clan-info">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                        <div style="font-size: 24px;">🐉</div>
+                        <div>
+                            <div style="font-size: 14px; font-weight: bold; color: #8b008b;" id="clanName">Dragon Empire</div>
+                            <div style="font-size: 11px; color: #ccc;">Cấp <span id="clanLevel">15</span> | Thành viên: <span id="clanMembers">48/50</span></div>
+                            <div style="font-size: 11px; color: #ccc;">Cống hiến: <span id="clanContribution">15,750</span></div>
+                        </div>
                     </div>
                     
                     <div class="clan-buildings">
-                        <div class="building-slot built" onclick="openBuilding('tower')">
-                            🗼<br>Tháp Trụ<br>Lv.5
+                        <div class="building-card" onclick="manageClanBuilding('tower')">
+                            <div style="font-size: 20px;">🗼</div>
+                            <div class="building-level">Tháp Trụ Lv.12</div>
+                            <div style="font-size: 9px; color: #ccc;">+120% EXP</div>
                         </div>
-                        <div class="building-slot built" onclick="openBuilding('warehouse')">
-                            🏪<br>Kho Làng<br>Lv.3
+                        <div class="building-card" onclick="manageClanBuilding('storage')">
+                            <div style="font-size: 20px;">📦</div>
+                            <div class="building-level">Kho Làng Lv.8</div>
+                            <div style="font-size: 9px; color: #ccc;">500 slots</div>
                         </div>
-                        <div class="building-slot built" onclick="openBuilding('equipment')">
-                            ⚔️<br>Kho Trang Bị<br>Lv.4
+                        <div class="building-card" onclick="manageClanBuilding('shop')">
+                            <div style="font-size: 20px;">🏪</div>
+                            <div class="building-level">Cửa Hàng Lv.6</div>
+                            <div style="font-size: 9px; color: #ccc;">Equipment Shop</div>
                         </div>
-                        <div class="building-slot" onclick="openBuilding('blacksmith')">
-                            🔨<br>Rèn<br>Chưa xây
-                        </div>
-                        <div class="building-slot" onclick="openBuilding('altar')">
-                            ⛩️<br>Bàn Thờ<br>Chưa xây
-                        </div>
-                        <div class="building-slot" onclick="openBuilding('training')">
-                            🏃<br>Luyện Tập<br>Chưa xây
+                        <div class="building-card" onclick="manageClanBuilding('altar')">
+                            <div style="font-size: 20px;">⛩️</div>
+                            <div class="building-level">Bàn Thờ Lv.10</div>
+                            <div style="font-size: 9px; color: #ccc;">Boss Summon</div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Dragon & Secret Realm -->
+            <div class="panel-section">
+                <div class="section-title">🐲 Rồng Thần & Bí Cảnh</div>
+                <div style="background: rgba(255, 215, 0, 0.2); border: 2px solid #ffd700; border-radius: 8px; padding: 10px; margin-bottom: 10px;">
+                    <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: #ffd700;">🔮 Ngọc Rồng Sở Hữu</div>
+                    <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+                        <div style="background: #ffd700; color: #000; padding: 5px; border-radius: 5px; font-size: 10px;">⭐ 1 Sao x3</div>
+                        <div style="background: #ff8c00; color: #000; padding: 5px; border-radius: 5px; font-size: 10px;">⭐ 3 Sao x2</div>
+                        <div style="background: #ff4500; color: #fff; padding: 5px; border-radius: 5px; font-size: 10px;">⭐ 5 Sao x1</div>
+                    </div>
+                    <button onclick="summonDragon()" style="width: 100%; padding: 8px; background: linear-gradient(135deg, #ffd700, #ff8c00); border: none; border-radius: 5px; color: #000; font-weight: bold; font-size: 11px; margin-top: 8px; cursor: pointer;">
+                        🐉 Triệu Hồi Rồng Thần
+                    </button>
+                </div>
+                
+                <div style="background: rgba(138, 43, 226, 0.2); border: 2px solid #8a2be2; border-radius: 8px; padding: 10px;">
+                    <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: #8a2be2;">🌌 Bí Cảnh Hiện Tại</div>
+                    <div style="font-size: 10px; color: #ccc; margin-bottom: 8px;">Bí Cảnh Rồng Vàng - Thời gian còn lại: 45:32</div>
+                    <div style="display: flex; gap: 5px; margin-bottom: 8px; font-size: 10px;">
+                        <div style="background: rgba(255,215,0,0.3); padding: 3px 6px; border-radius: 3px;">💰 Phôi Pet Vàng</div>
+                        <div style="background: rgba(138,43,226,0.3); padding: 3px 6px; border-radius: 3px;">💎 Đá Hiếm</div>
+                    </div>
+                    <button onclick="enterSecretRealm()" style="width: 100%; padding: 6px; background: linear-gradient(135deg, #8a2be2, #9932cc); border: none; border-radius: 5px; color: white; font-size: 10px; cursor: pointer;">
+                        🚪 Vào Bí Cảnh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat System -->
+            <div class="panel-section">
+                <div class="section-title">💬 Hệ Thống Chat</div>
+                <div class="chat-tabs">
+                    <div class="chat-tab active" data-tab="all">Tất Cả</div>
+                    <div class="chat-tab" data-tab="clan">Clan</div>
+                    <div class="chat-tab" data-tab="world">Thế Giới</div>
+                    <div class="chat-tab" data-tab="system">Hệ Thống</div>
+                </div>
+                <div class="chat-window" id="chatWindow">
+                    <div class="chat-message system">🎮 Chào mừng đến với DreamBooks RPG!</div>
+                    <div class="chat-message world">[Thế Giới] DragonSlayer: Ai muốn đào ngọc rồng không?</div>
+                    <div class="chat-message clan">[Clan] ClanLeader: Tối nay clan war 20h nhé ae!</div>
+                    <div class="chat-message system">⚔️ PvP Zone: Hãy cẩn thận khi vào vùng PvP!</div>
+                    <div class="chat-message world">[Thế Giới] PhoenixRider: Bán ngọc rồng 7 sao 5000 kim cương!</div>
+                    <div class="chat-message clan">[Clan] ViceLeader: Đã nâng cấp tháp trụ lên level 12!</div>
+                </div>
+                <div class="chat-input-container">
+                    <input type="text" class="chat-input" id="chatInput" placeholder="Nhập tin nhắn..." maxlength="100">
+                    <button class="chat-send-btn" onclick="sendChatMessage()">Gửi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced Game State for DreamBooks
+        const gameState = {
+            player: {
+                name: 'Warrior',
+                class: 'warrior',
+                x: 2000,
+                y: 1400,
+                level: 25,
+                hp: 2500,
+                maxHp: 2500,
+                gold: 15000,
+                diamond: 750,
+                
+                // Enhanced stats
+                baseAttack: 100,
+                baseDefense: 50,
+                baseSpeed: 100,
+                attack: 450,      // Base + Equipment + Gems
+                defense: 180,     // Base + Equipment + Gems  
+                speed: 150,       // Base + Equipment + Gems
+                critRate: 25,     // From gems and equipment
+                critDamage: 180,  // From gems and equipment
+                
+                // Skin system
+                currentSkin: 'default',
+                ownedSkins: ['default'],
+                skinGems: new Array(12).fill(null),
+                skinTransform: 1, // 1, 2, 3
+                
+                // Equipment enhancement
+                equipment: {
+                    weapon: { id: 'dragon_sword', level: 7, gems: new Array(8).fill(null), transform: 2 },
+                    armor: { id: 'dragon_armor', level: 5, gems: new Array(8).fill(null), transform: 1 },
+                    helmet: { id: 'dragon_helmet', level: 3, gems: new Array(8).fill(null), transform: 1 }
+                },
+                
+                // Skill system (no mana, cooldown based)
+                skills: new Array(12).fill(null),
+                skillCooldowns: {},
+                skillGems: {
+                    hp: 3,
+                    reflect: 2, 
+                    crit: 4,
+                    speed: 2
+                },
+                
+                // PvP system
+                isInSafeZone: true,
+                shieldRevive: true, // Clan members have shield
+                pvpKills: 0,
+                pvpDeaths: 0,
+                
+                // Position and zone
+                zone: 'grassland',
+                isMoving: false,
+                targetX: null,
+                targetY: null
+            },
+            
+            pet: {
+                name: 'Thunder Wolf',
+                level: 5,
+                hp: 800,
+                maxHp: 800,
+                attack: 150,
+                defense: 80,
+                icon: '🐺',
+                gems: new Array(12).fill(null),
+                transform: 2, // 1, 2, 3
+                isSpecial: true, // For robot fusion
+                exp: 450,
+                expToNext: 600
+            },
+            
+            robotFusion: {
+                isActive: false,
+                timeRemaining: 0,
+                controller: null,
+                participants: [],
+                hp: 0,
+                maxHp: 0,
+                stats: { attack: 0, defense: 0, speed: 0 }
+            },
+            
+            clan: {
+                name: 'Dragon Empire',
+                level: 15,
+                memberCount: 48,
+                maxMembers: 50,
+                contribution: 15750,
+                buildings: {
+                    tower: { level: 12, effect: { type: 'exp_bonus', value: 120 } },
+                    storage: { level: 8, slots: 500 },
+                    shop: { level: 6, items: [] },
+                    altar: { level: 10, bossSummoned: false }
+                },
+                village: 'village1'
+            },
+            
+            arena: {
+                rank: 'Diamond III',
+                points: 2847,
+                wins: 24,
+                losses: 8,
+                inQueue: false,
+                queueType: null
+            },
+            
+            dragon: {
+                orbs: [
+                    { star: 1, count: 3 },
+                    { star: 3, count: 2 },
+                    { star: 5, count: 1 }
+                ],
+                summoned: false,
+                lastSummon: 0
+            },
+            
+            secretRealm: {
+                isOpen: false,
+                type: 'golden_dragon',
+                timeRemaining: 2732, // seconds
+                rewards: ['golden_pet_embryo', 'rare_stones']
+            },
+            
+            world: {
+                offsetX: 0,
+                offsetY: 0,
+                currentZone: 'grassland',
+                digTiles: [],
+                monsters: [],
+                players: [], // Other players for PvP
+                campfires: [
+                    { x: 1200, y: 1000, active: true },
+                    { x: 2800, y: 1600, active: true }
+                ],
+                dragonOrbs: [], // Spawned dragon orbs from digging
+                secretPortals: []
+            },
+            
+            ui: {
+                selectedClass: null,
+                gameStarted: false,
+                chatTab: 'all',
+                enhancementOpen: false,
+                chatMessages: []
+            }
+        };
+
+        // Enhanced Item Database for DreamBooks
+        const itemDatabase = {
+            // Skins
+            'skin_default': { 
+                name: 'Skin Mặc Định', type: 'skin', 
+                icon: '🧙', stats: { hp: 0, attack: 0, speed: 0 }, 
+                price: 0, gemSlots: 12
+            },
+            'skin_royal': { 
+                name: 'Skin Hoàng Gia', type: 'skin', 
+                icon: '👑', stats: { hp: 200, attack: 50, speed: 20 }, 
+                price: 500, currency: 'diamond', gemSlots: 12
+            },
+            'skin_dragon': { 
+                name: 'Skin Long Vương', type: 'skin', 
+                icon: '🐲', stats: { hp: 500, attack: 100, speed: 50 }, 
+                price: 1500, currency: 'diamond', gemSlots: 12
+            },
+            
+            // Equipment with enhancement levels
+            'dragon_sword': {
+                name: 'Kiếm Rồng', type: 'weapon', rarity: 'legendary',
+                icon: '⚔️', baseStats: { attack: 150, crit: 10 },
+                maxLevel: 20, enhanceRates: [90, 80, 70, 60, 50, 40, 30, 25, 20, 15],
+                gemSlots: 8, transforms: 3
+            },
+            'dragon_armor': {
+                name: 'Giáp Rồng', type: 'armor', rarity: 'legendary', 
+                icon: '🛡️', baseStats: { defense: 100, hp: 300 },
+                maxLevel: 20, enhanceRates: [90, 80, 70, 60, 50, 40, 30, 25, 20, 15],
+                gemSlots: 8, transforms: 3
+            },
+            
+            // Gems for socketing
+            'ruby_gem': { 
+                name: 'Ngọc Ruby', type: 'gem', 
+                icon: '🔴', effect: { type: 'hp', value: 100 }, 
+                socketSuccess: 0.8, price: 100
+            },
+            'emerald_gem': { 
+                name: 'Ngọc Emerald', type: 'gem', 
+                icon: '🟢', effect: { type: 'attack', value: 25 }, 
+                socketSuccess: 0.8, price: 150
+            },
+            'sapphire_gem': { 
+                name: 'Ngọc Sapphire', type: 'gem', 
+                icon: '🔵', effect: { type: 'defense', value: 20 }, 
+                socketSuccess: 0.8, price: 120
+            },
+            'diamond_gem': { 
+                name: 'Ngọc Diamond', type: 'gem', 
+                icon: '⚪', effect: { type: 'speed', value: 15 }, 
+                socketSuccess: 0.7, price: 200
+            },
+            
+            // Dragon orbs
+            'dragon_orb_1': { name: 'Ngọc Rồng 1 Sao', icon: '⭐', star: 1 },
+            'dragon_orb_3': { name: 'Ngọc Rồng 3 Sao', icon: '⭐', star: 3 },
+            'dragon_orb_5': { name: 'Ngọc Rồng 5 Sao', icon: '⭐', star: 5 },
+            'dragon_orb_7': { name: 'Ngọc Rồng 7 Sao', icon: '⭐', star: 7 },
+            
+            // Secret realm rewards
+            'golden_pet_embryo': { name: 'Phôi Pet Vàng', icon: '🥚', type: 'pet_embryo' },
+            'rare_stone': { name: 'Đá Hiếm', icon: '💎', type: 'material' },
+            
+            // Boss cards
+            'boss_card_dragon': { name: 'Thẻ Boss Rồng', icon: '🃏', type: 'boss_card' }
+        };
+
+        // Zone configurations with PvP settings
+        const zoneConfigs = {
+            grassland: {
+                name: 'Thảo Nguyên An Toàn',
+                isPvP: false,
+                dropItems: false,
+                background: '#2d4a2d',
+                respawnPoint: true,
+                description: 'Khu vực an toàn - PK không mất đồ'
+            },
+            ice: {
+                name: 'Vùng Băng Giá',
+                isPvP: true,
+                dropItems: true,
+                background: '#add8e6',
+                monsters: ['ice_golem', 'frost_wolf'],
+                description: 'Vùng PvP - Cẩn thận rơi đồ khi chết'
+            },
+            fire: {
+                name: 'Vùng Lửa',
+                isPvP: true,
+                dropItems: true,
+                background: '#ff4500',
+                monsters: ['fire_demon', 'lava_beast'],
+                description: 'Vùng PvP - Nguy hiểm cao'
+            },
+            graveyard: {
+                name: 'Nghĩa Địa',
+                isPvP: true,
+                dropItems: true,
+                background: '#696969',
+                monsters: ['skeleton', 'zombie', 'ghost'],
+                description: 'Vùng PvP - Quái vật undead'
+            },
+            forest: {
+                name: 'Rừng Sâu',
+                isPvP: true,
+                dropItems: true,
+                background: '#228b22',
+                monsters: ['forest_troll', 'wild_boar'],
+                description: 'Vùng PvP - Rừng rậm nguy hiểm'
+            },
+            mountain: {
+                name: 'Núi Cao',
+                isPvP: true,
+                dropItems: true,
+                background: '#696969',
+                monsters: ['mountain_giant', 'rock_golem'],
+                description: 'Vùng PvP - Địa hình hiểm trở'
+            }
+        };
+
+        // Skills database (cooldown-based, no mana)
+        const skillDatabase = {
+            'power_slash': {
+                name: 'Chém Mạnh', icon: '⚔️', cooldown: 3000,
+                description: 'Đòn chém mạnh gây 150% sát thương',
+                effect: { type: 'damage', multiplier: 1.5 }
+            },
+            'shield_block': {
+                name: 'Phòng Thủ', icon: '🛡️', cooldown: 5000,
+                description: 'Tăng 50% phòng thủ trong 3 giây',
+                effect: { type: 'defense_buff', value: 0.5, duration: 3000 }
+            },
+            'heal': {
+                name: 'Hồi Máu', icon: '💚', cooldown: 10000,
+                description: 'Hồi phục 30% HP tối đa',
+                effect: { type: 'heal', value: 0.3 }
+            },
+            'speed_boost': {
+                name: 'Tăng Tốc', icon: '⚡', cooldown: 8000,
+                description: 'Tăng 100% tốc độ trong 5 giây',
+                effect: { type: 'speed_buff', value: 1.0, duration: 5000 }
+            },
+            'critical_strike': {
+                name: 'Chí Mạng', icon: '💥', cooldown: 12000,
+                description: 'Đòn tiếp theo 100% chí mạng',
+                effect: { type: 'crit_buff', value: 1.0, duration: 10000 }
+            },
+            'reflect_damage': {
+                name: 'Phản Damage', icon: '🔄', cooldown: 15000,
+                description: 'Phản 50% sát thương nhận vào trong 5 giây',
+                effect: { type: 'reflect', value: 0.5, duration: 5000 }
+            }
+        };
+
+        // Initialize game
+        function initGame() {
+            console.log('🎮 Khởi tạo DreamBooks RPG...');
+            showCharacterSelection();
+        }
+
+        function showCharacterSelection() {
+            document.getElementById('characterSelection').style.display = 'flex';
+            setupClassSelection();
+        }
+
+        function setupClassSelection() {
+            const classCards = document.querySelectorAll('.class-card');
+            const startBtn = document.getElementById('startGameBtn');
+            
+            classCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    classCards.forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    gameState.ui.selectedClass = card.dataset.class;
+                    startBtn.disabled = false;
+                });
+            });
+            
+            startBtn.addEventListener('click', startGame);
+        }
+
+        function startGame() {
+            if (!gameState.ui.selectedClass) return;
+            
+            gameState.player.class = gameState.ui.selectedClass;
+            
+            document.getElementById('characterSelection').style.display = 'none';
+            document.getElementById('gameContainer').style.display = 'flex';
+            
+            initializeGameSystems();
+            gameState.ui.gameStarted = true;
+            
+            addChatMessage('system', `🎉 Chào mừng ${getClassName(gameState.player.class)} đến với DreamBooks!`);
+            showNotification(`Chào mừng đến DreamBooks RPG! 🌟`, 'info');
+        }
+
+        function getClassName(classType) {
+            const classNames = {
+                warrior: 'Chiến Binh',
+                mage: 'Pháp Sư', 
+                archer: 'Cung Thủ',
+                rogue: 'Sát Thủ'
+            };
+            return classNames[classType] || 'Chiến Binh';
+        }
+
+        function getClassIcon(classType) {
+            const classIcons = {
+                warrior: '⚔️',
+                mage: '🔮',
+                archer: '🏹', 
+                rogue: '🗡️'
+            };
+            return classIcons[classType] || '⚔️';
+        }
+
+        function initializeGameSystems() {
+            // Setup enhanced event listeners
+            setupEventListeners();
+            
+            // Generate world content
+            generateWorldContent();
+            
+            // Initialize skills
+            initializeSkills();
+            
+            // Start enhanced game loop
+            gameLoop();
+            
+            // Update all UI elements
+            updateUI();
+            updatePlayerPosition();
+            updateCamera();
+            updateMinimap();
+            
+            // Initialize dig tiles
+            generateDigTiles();
+            
+            // Initialize chat system
+            initChatSystem();
+            
+            // Start robot fusion check
+            startRobotFusionCheck();
+        }
+
+        function generateWorldContent() {
+            const worldMap = document.getElementById('worldMap');
+            
+            // Clear existing content
+            document.querySelectorAll('.monster, .dig-tile, .dragon-orb, .secret-portal').forEach(el => el.remove());
+            
+            // Generate monsters based on current zone
+            generateMonstersForZone();
+            
+            // Update zone background
+            updateZoneBackground();
+        }
+
+        function generateMonstersForZone() {
+            const currentZone = zoneConfigs[gameState.world.currentZone];
+            if (!currentZone || !currentZone.monsters) return;
+            
+            const monsterCount = Math.floor(Math.random() * 8) + 5;
+            
+            for (let i = 0; i < monsterCount; i++) {
+                const monsterType = currentZone.monsters[Math.floor(Math.random() * currentZone.monsters.length)];
+                createMonster(monsterType);
+            }
+        }
+
+        function createMonster(type) {
+            const monster = document.createElement('div');
+            monster.className = 'monster';
+            monster.style.left = (Math.random() * 3500 + 200) + 'px';
+            monster.style.top = (Math.random() * 2500 + 200) + 'px';
+            monster.style.width = '60px';
+            monster.style.height = '60px';
+            monster.style.fontSize = '28px';
+            monster.style.background = 'linear-gradient(135deg, #8b0000, #ff0000)';
+            monster.style.border = '3px solid #ff4500';
+            
+            // Monster icons based on type
+            const monsterIcons = {
+                ice_golem: '🧊',
+                frost_wolf: '🐺',
+                fire_demon: '🔥',
+                lava_beast: '🌋',
+                skeleton: '💀',
+                zombie: '🧟',
+                ghost: '👻',
+                forest_troll: '👹',
+                wild_boar: '🐗',
+                mountain_giant: '👿',
+                rock_golem: '🗿'
+            };
+            
+            monster.textContent = monsterIcons[type] || '👹';
+            monster.addEventListener('click', () => attackMonster(monster, type));
+            
+            document.getElementById('worldMap').appendChild(monster);
+        }
+
+        function generateDigTiles() {
+            const worldMap = document.getElementById('worldMap');
+            const tileCount = 200; // Distribute dig tiles across map
+            
+            for (let i = 0; i < tileCount; i++) {
+                const tile = document.createElement('div');
+                tile.className = 'dig-tile';
+                tile.style.left = (Math.random() * 3800) + 'px';
+                tile.style.top = (Math.random() * 2800) + 'px';
+                tile.dataset.tileId = i;
+                
+                tile.addEventListener('click', () => digTile(tile, i));
+                worldMap.appendChild(tile);
+            }
+        }
+
+        function digTile(tileElement, tileId) {
+            if (tileElement.classList.contains('dug')) return;
+            
+            tileElement.classList.add('dug');
+            
+            const random = Math.random();
+            let result = null;
+            
+            if (random < 0.01) { // 1% chance for dragon
+                result = spawnDragon(tileElement);
+                addChatMessage('system', '🐉 Bạn đã đào ra một con rồng!');
+            } else if (random < 0.05) { // 4% chance for dragon orb
+                result = spawnDragonOrb(tileElement);
+                addChatMessage('loot', '⭐ Tìm được ngọc rồng!');
+            } else if (random < 0.15) { // 10% chance for gems
+                result = getRandomGem();
+                addChatMessage('loot', `💎 Tìm được ${result.name}!`);
+            } else if (random < 0.3) { // 15% chance for monster spawn
+                spawnMonsterAtTile(tileElement);
+                addChatMessage('combat', '👹 Một quái vật xuất hiện!');
+            } else {
+                // Nothing found
+                addChatMessage('system', '🕳️ Không tìm thấy gì...');
+            }
+            
+            showNotification('Đã đào! ' + (result ? result.name : 'Không có gì'), 'info');
+        }
+
+        function spawnDragon(tileElement) {
+            const dragon = document.createElement('div');
+            dragon.className = 'dragon';
+            dragon.style.left = tileElement.style.left;
+            dragon.style.top = tileElement.style.top;
+            dragon.textContent = '🐉';
+            dragon.title = 'Rồng Cổ Đại - Click để chiến đấu!';
+            
+            dragon.addEventListener('click', () => fightDragon(dragon));
+            document.getElementById('worldMap').appendChild(dragon);
+            
+            return { name: 'Rồng Cổ Đại' };
+        }
+
+        function spawnDragonOrb(tileElement) {
+            const orb = document.createElement('div');
+            orb.className = 'dragon-orb';
+            orb.style.left = tileElement.style.left;
+            orb.style.top = tileElement.style.top;
+            
+            const star = Math.random() < 0.1 ? 7 : Math.random() < 0.3 ? 5 : Math.random() < 0.6 ? 3 : 1;
+            orb.textContent = '⭐';
+            orb.dataset.star = star;
+            orb.title = `Ngọc Rồng ${star} Sao`;
+            
+            orb.addEventListener('click', () => collectDragonOrb(orb, star));
+            document.getElementById('worldMap').appendChild(orb);
+            
+            return { name: `Ngọc Rồng ${star} Sao` };
+        }
+
+        function collectDragonOrb(orbElement, star) {
+            // Add to player's dragon orb collection
+            const existingOrb = gameState.dragon.orbs.find(orb => orb.star === star);
+            if (existingOrb) {
+                existingOrb.count++;
+            } else {
+                gameState.dragon.orbs.push({ star: star, count: 1 });
+            }
+            
+            orbElement.remove();
+            showNotification(`Nhận được Ngọc Rồng ${star} Sao! ⭐`, 'loot');
+            addChatMessage('loot', `⭐ Nhận được Ngọc Rồng ${star} Sao!`);
+            
+            updateUI();
+        }
+
+        function getRandomGem() {
+            const gems = ['ruby_gem', 'emerald_gem', 'sapphire_gem', 'diamond_gem'];
+            const gemId = gems[Math.floor(Math.random() * gems.length)];
+            return itemDatabase[gemId];
+        }
+
+        function enterZone(zoneName) {
+            const zoneConfig = zoneConfigs[zoneName];
+            if (!zoneConfig) return;
+            
+            // Update player zone status
+            gameState.world.currentZone = zoneName;
+            gameState.player.zone = zoneName;
+            gameState.player.isInSafeZone = !zoneConfig.isPvP;
+            
+            // Update background
+            updateZoneBackground();
+            
+            // Generate new content for zone
+            generateWorldContent();
+            
+            addChatMessage('system', `🗺️ Đã vào ${zoneConfig.name}!`);
+            if (zoneConfig.isPvP) {
+                addChatMessage('combat', '⚠️ Cảnh báo: Vùng PvP - Có thể rơi đồ khi chết!');
+                showNotification('Vùng PvP - Cẩn thận! ⚔️', 'warning');
+            } else {
+                showNotification(`An toàn tại ${zoneConfig.name} 🛡️`, 'info');
+            }
+            
+            updateUI();
+        }
+
+        function updateZoneBackground() {
+            const gameWorld = document.getElementById('gameWorld');
+            const currentZone = zoneConfigs[gameState.world.currentZone];
+            if (currentZone) {
+                gameWorld.style.background = currentZone.background;
+            }
+        }
+
+        function enterClanVillage(villageId) {
+            if (!gameState.clan.name) {
+                showNotification('Bạn chưa có clan!', 'warning');
+                return;
+            }
+            
+            addChatMessage('clan', `🏰 Đã vào làng clan ${gameState.clan.name}!`);
+            showNotification('Chào mừng về làng clan! 🏰', 'info');
+            
+            // Open clan management interface (could be implemented)
+            openClanManagement();
+        }
+
+        function openClanManagement() {
+            // Placeholder for clan management interface
+            addChatMessage('system', '🏰 Giao diện quản lý clan sẽ được mở...');
+        }
+
+        function openEnhancement() {
+            gameState.ui.enhancementOpen = true;
+            addChatMessage('system', '🔥 Lửa trại - Nơi khảm ngọc và tiến hóa trang bị!');
+            showNotification('Lửa trại mở! Có thể khảm ngọc và tiến hóa! 🔥', 'info');
+        }
+
+        function enhanceEquipment() {
+            const weapon = gameState.player.equipment.weapon;
+            if (!weapon) return;
+            
+            const cost = 5000 * (weapon.level + 1);
+            const successRate = weapon.level < 10 ? 0.8 - (weapon.level * 0.05) : 0.3 - ((weapon.level - 10) * 0.02);
+            
+            if (gameState.player.gold < cost) {
+                showNotification('Không đủ vàng để nâng cấp!', 'error');
+                return;
+            }
+            
+            gameState.player.gold -= cost;
+            
+            if (Math.random() < successRate) {
+                weapon.level++;
+                gameState.player.attack += 25; // Increase attack per level
+                addChatMessage('system', `✅ Nâng cấp thành công! ${weapon.id} +${weapon.level}`);
+                showNotification(`Nâng cấp thành công! +${weapon.level} ⚡`, 'info');
+                
+                // Check for transformation at certain levels
+                if (weapon.level % 5 === 0 && weapon.transform < 3) {
+                    weapon.transform++;
+                    addChatMessage('system', `🔥 Trang bị tiến hóa! Dạng ${weapon.transform}/3`);
+                    showNotification(`Trang bị tiến hóa! Dạng ${weapon.transform}! 🔥`, 'info');
+                }
+            } else {
+                addChatMessage('system', `❌ Nâng cấp thất bại! Mất ${cost} vàng`);
+                showNotification('Nâng cấp thất bại! 💸', 'error');
+            }
+            
+            updateUI();
+        }
+
+        function upgradePet() {
+            const cost = 100 * gameState.pet.level;
+            
+            if (gameState.player.diamond < cost) {
+                showNotification('Không đủ kim cương!', 'error');
+                return;
+            }
+            
+            if (gameState.pet.level >= 10) {
+                showNotification('Pet đã đạt level tối đa!', 'warning');
+                return;
+            }
+            
+            gameState.player.diamond -= cost;
+            gameState.pet.level++;
+            gameState.pet.maxHp += 100;
+            gameState.pet.hp = gameState.pet.maxHp;
+            gameState.pet.attack += 20;
+            gameState.pet.defense += 10;
+            
+            addChatMessage('system', `🐾 Pet nâng cấp lên Level ${gameState.pet.level}!`);
+            showNotification(`Pet Level ${gameState.pet.level}! 🐾`, 'info');
+            
+            updateUI();
+        }
+
+        function transformPet() {
+            if (gameState.pet.transform >= 3) {
+                showNotification('Pet đã đạt dạng tối đa!', 'warning');
+                return;
+            }
+            
+            const cost = gameState.pet.transform * 500; // Increasing cost
+            
+            if (gameState.player.diamond < cost) {
+                showNotification(`Cần ${cost} kim cương để biến hình!`, 'error');
+                return;
+            }
+            
+            gameState.player.diamond -= cost;
+            gameState.pet.transform++;
+            
+            // Update pet appearance and stats
+            const petElement = document.getElementById('pet');
+            petElement.classList.add('transformed');
+            
+            // Boost all stats significantly
+            gameState.pet.maxHp = Math.floor(gameState.pet.maxHp * 1.5);
+            gameState.pet.hp = gameState.pet.maxHp;
+            gameState.pet.attack = Math.floor(gameState.pet.attack * 1.3);
+            gameState.pet.defense = Math.floor(gameState.pet.defense * 1.3);
+            
+            // Change icon based on transformation
+            const transformIcons = ['🐺', '🐉', '👑']; // Default, Dragon, Divine
+            gameState.pet.icon = transformIcons[gameState.pet.transform - 1];
+            petElement.textContent = gameState.pet.icon;
+            
+            addChatMessage('system', `✨ Pet biến hình thành công! Dạng ${gameState.pet.transform}/3`);
+            showNotification(`Pet biến hình! Dạng ${gameState.pet.transform}! ✨`, 'info');
+            
+            updateUI();
+        }
+
+        function attemptRobotFusion() {
+            // Check if 5 players with special pets are nearby
+            const nearbyPlayers = findNearbyPlayersWithSpecialPets();
+            
+            if (nearbyPlayers.length < 5) {
+                showNotification(`Cần 5 người có thú cưỡi đặc biệt! (${nearbyPlayers.length}/5)`, 'warning');
+                return;
+            }
+            
+            // Start robot fusion
+            gameState.robotFusion.isActive = true;
+            gameState.robotFusion.timeRemaining = 300; // 5 minutes
+            gameState.robotFusion.controller = gameState.player.name;
+            gameState.robotFusion.participants = nearbyPlayers;
+            
+            // Calculate combined stats
+            let totalHp = 0, totalAttack = 0, totalDefense = 0, totalSpeed = 0;
+            nearbyPlayers.forEach(player => {
+                totalHp += player.pet.maxHp;
+                totalAttack += player.pet.attack;
+                totalDefense += player.pet.defense;
+                totalSpeed += player.pet.speed || 100;
+            });
+            
+            gameState.robotFusion.maxHp = totalHp;
+            gameState.robotFusion.hp = totalHp;
+            gameState.robotFusion.stats = {
+                attack: totalAttack,
+                defense: totalDefense,
+                speed: Math.floor(totalSpeed / 5)
+            };
+            
+            // Spawn robot on map
+            spawnRobot();
+            
+            addChatMessage('system', '🤖 Hợp thể robot thành công! Thời gian: 5 phút');
+            showNotification('Robot hợp thể thành công! 🤖', 'info');
+            
+            updateUI();
+        }
+
+        function findNearbyPlayersWithSpecialPets() {
+            // Simulate nearby players (in real game, this would check actual players)
+            return [
+                { name: 'Player1', pet: { maxHp: 800, attack: 150, defense: 80, isSpecial: true } },
+                { name: 'Player2', pet: { maxHp: 750, attack: 140, defense: 70, isSpecial: true } },
+                { name: 'Player3', pet: { maxHp: 900, attack: 160, defense: 90, isSpecial: true } },
+                { name: 'Player4', pet: { maxHp: 850, attack: 155, defense: 85, isSpecial: true } },
+                { name: 'Player5', pet: { maxHp: 800, attack: 145, defense: 75, isSpecial: true } }
+            ];
+        }
+
+        function spawnRobot() {
+            const robot = document.createElement('div');
+            robot.className = 'robot-fusion';
+            robot.id = 'fusionRobot';
+            robot.style.left = gameState.player.x + 'px';
+            robot.style.top = gameState.player.y + 'px';
+            robot.textContent = '🤖';
+            robot.title = `Robot Hợp Thể - HP: ${gameState.robotFusion.hp}/${gameState.robotFusion.maxHp}`;
+            
+            document.getElementById('worldMap').appendChild(robot);
+            
+            // Start robot timer
+            startRobotTimer();
+        }
+
+        function startRobotTimer() {
+            const robotTimer = setInterval(() => {
+                gameState.robotFusion.timeRemaining--;
+                
+                if (gameState.robotFusion.timeRemaining <= 0) {
+                    // Robot expires
+                    const robotElement = document.getElementById('fusionRobot');
+                    if (robotElement) robotElement.remove();
+                    
+                    gameState.robotFusion.isActive = false;
+                    addChatMessage('system', '🤖 Robot hợp thể đã hết thời gian!');
+                    showNotification('Robot hợp thể kết thúc! ⏰', 'warning');
+                    
+                    clearInterval(robotTimer);
+                }
+                
+                updateUI();
+            }, 1000);
+        }
+
+        function summonDragon() {
+            // Check if player has enough dragon orbs
+            const totalOrbs = gameState.dragon.orbs.reduce((sum, orb) => sum + orb.count, 0);
+            
+            if (totalOrbs < 7) {
+                showNotification('Cần ít nhất 7 ngọc rồng để triệu hồi!', 'warning');
+                return;
+            }
+            
+            // Consume orbs and summon dragon
+            gameState.dragon.orbs = []; // Clear all orbs
+            gameState.dragon.summoned = true;
+            gameState.dragon.lastSummon = Date.now();
+            
+            // Open secret realm
+            openSecretRealm();
+            
+            addChatMessage('system', '🐉 Rồng Thần đã được triệu hồi! Bí cảnh mở ra!');
+            showNotification('Rồng Thần xuất hiện! Bí cảnh mở! 🐉', 'info');
+            
+            updateUI();
+        }
+
+        function openSecretRealm() {
+            gameState.secretRealm.isOpen = true;
+            gameState.secretRealm.timeRemaining = 3600; // 1 hour
+            
+            // Spawn secret portal
+            const portal = document.createElement('div');
+            portal.className = 'secret-portal';
+            portal.style.left = (Math.random() * 3000 + 500) + 'px';
+            portal.style.top = (Math.random() * 2000 + 500) + 'px';
+            portal.textContent = '🌀';
+            portal.title = 'Cổng Bí Cảnh - Click để vào';
+            
+            portal.addEventListener('click', () => enterSecretRealm());
+            document.getElementById('worldMap').appendChild(portal);
+            
+            // Start realm timer
+            startSecretRealmTimer();
+        }
+
+        function enterSecretRealm() {
+            if (!gameState.secretRealm.isOpen) {
+                showNotification('Bí cảnh chưa mở!', 'warning');
+                return;
+            }
+            
+            addChatMessage('system', '🌌 Đã vào bí cảnh! Tìm kiếm phôi pet vàng và đá hiếm!');
+            showNotification('Vào bí cảnh thành công! 🌌', 'info');
+            
+            // Simulate finding rewards (in real game, this would be a separate area/instance)
+            setTimeout(() => {
+                const rewards = ['golden_pet_embryo', 'rare_stone', 'rare_stone'];
+                rewards.forEach(reward => {
+                    addChatMessage('loot', `💰 Tìm được: ${itemDatabase[reward]?.name || reward}!`);
+                });
+                showNotification('Nhận được phần thưởng bí cảnh! 💰', 'loot');
+            }, 5000);
+        }
+
+        function startSecretRealmTimer() {
+            const realmTimer = setInterval(() => {
+                gameState.secretRealm.timeRemaining--;
+                
+                if (gameState.secretRealm.timeRemaining <= 0) {
+                    gameState.secretRealm.isOpen = false;
+                    
+                    // Remove portal
+                    document.querySelectorAll('.secret-portal').forEach(el => el.remove());
+                    
+                    addChatMessage('system', '🌌 Bí cảnh đã đóng!');
+                    clearInterval(realmTimer);
+                }
+                
+                updateUI();
+            }, 1000);
+        }
+
+        function queueArena(type) {
+            if (gameState.arena.inQueue) {
+                showNotification('Đã trong hàng đợi!', 'warning');
+                return;
+            }
+            
+            gameState.arena.inQueue = true;
+            gameState.arena.queueType = type;
+            
+            addChatMessage('system', `⚔️ Đã vào hàng đợi ${type === 'solo' ? 'Solo' : 'Clan War'}!`);
+            showNotification(`Đang tìm trận ${type === 'solo' ? 'Solo' : 'Clan War'}... ⚔️`, 'info');
+            
+            // Simulate finding match
+            setTimeout(() => {
+                if (gameState.arena.inQueue) {
+                    startArenaMatch(type);
+                }
+            }, Math.random() * 10000 + 5000); // 5-15 seconds
+        }
+
+        function startArenaMatch(type) {
+            gameState.arena.inQueue = false;
+            
+            addChatMessage('combat', `⚔️ Tìm thấy trận ${type === 'solo' ? 'Solo' : 'Clan War'}! Chuẩn bị chiến đấu!`);
+            showNotification('Trận đấu bắt đầu! ⚔️', 'info');
+            
+            // Simulate arena match (in real game, this would load arena instance)
+            setTimeout(() => {
+                const victory = Math.random() > 0.5;
+                if (victory) {
+                    gameState.arena.wins++;
+                    gameState.arena.points += 25;
+                    addChatMessage('combat', '🏆 Thắng trận Arena! +25 điểm');
+                    showNotification('Thắng Arena! 🏆', 'info');
+                } else {
+                    gameState.arena.losses++;
+                    gameState.arena.points = Math.max(0, gameState.arena.points - 15);
+                    addChatMessage('combat', '💀 Thua trận Arena! -15 điểm');
+                    showNotification('Thua Arena! 💀', 'error');
+                }
+                updateUI();
+            }, 30000); // 30 second "match"
+        }
+
+        function manageClanBuilding(buildingType) {
+            const building = gameState.clan.buildings[buildingType];
+            if (!building) return;
+            
+            const upgradeCost = building.level * 1000;
+            
+            if (gameState.player.gold < upgradeCost) {
+                showNotification(`Cần ${upgradeCost} vàng để nâng cấp!`, 'error');
+                return;
+            }
+            
+            gameState.player.gold -= upgradeCost;
+            building.level++;
+            
+            // Update building effects
+            switch(buildingType) {
+                case 'tower':
+                    building.effect.value = building.level * 10;
+                    break;
+                case 'storage':
+                    building.slots = building.level * 50;
+                    break;
+            }
+            
+            addChatMessage('clan', `🏰 Nâng cấp ${buildingType} lên level ${building.level}!`);
+            showNotification(`Nâng cấp ${buildingType} thành công! 🏰`, 'info');
+            
+            updateUI();
+        }
+
+        function attackMonster(monsterElement, monsterType) {
+            // Simple combat simulation
+            const playerDamage = gameState.player.attack + Math.floor(Math.random() * 50);
+            const isCrit = Math.random() < (gameState.player.critRate / 100);
+            const finalDamage = isCrit ? Math.floor(playerDamage * (gameState.player.critDamage / 100)) : playerDamage;
+            
+            // Show damage number
+            showDamageNumber(
+                parseInt(monsterElement.style.left),
+                parseInt(monsterElement.style.top),
+                finalDamage,
+                isCrit ? 'crit' : 'normal'
+            );
+            
+            // Remove monster (simplified)
+            monsterElement.remove();
+            
+            // Gain EXP and gold
+            const expGain = Math.floor(Math.random() * 50) + 25;
+            const goldGain = Math.floor(Math.random() * 100) + 50;
+            
+            gameState.player.gold += goldGain;
+            
+            addChatMessage('combat', `⚔️ Tiêu diệt ${monsterType}! +${expGain} EXP, +${goldGain} Gold`);
+            showNotification(`+${expGain} EXP, +${goldGain} Gold! 💰`, 'info');
+            
+            updateUI();
+        }
+
+        function fightDragon(dragonElement) {
+            // Epic dragon fight simulation
+            const playerPower = gameState.player.attack + gameState.player.defense;
+            const dragonPower = 1000;
+            
+            if (playerPower < dragonPower * 0.6) {
+                showNotification('Bạn quá yếu để chiến đấu với rồng!', 'error');
+                return;
+            }
+            
+            addChatMessage('combat', '🐉 Bắt đầu chiến đấu với Rồng Cổ Đại!');
+            
+            // Simulate epic battle
+            setTimeout(() => {
+                const victory = Math.random() < (playerPower / dragonPower);
+                
+                if (victory) {
+                    dragonElement.remove();
+                    
+                    // Epic rewards
+                    const orbsFound = Math.floor(Math.random() * 3) + 1;
+                    for (let i = 0; i < orbsFound; i++) {
+                        const star = Math.random() < 0.3 ? 7 : 5;
+                        const existingOrb = gameState.dragon.orbs.find(orb => orb.star === star);
+                        if (existingOrb) {
+                            existingOrb.count++;
+                        } else {
+                            gameState.dragon.orbs.push({ star: star, count: 1 });
+                        }
+                    }
+                    
+                    gameState.player.gold += 5000;
+                    gameState.player.diamond += 100;
+                    
+                    addChatMessage('combat', `🏆 Đánh bại Rồng Cổ Đại! Nhận ${orbsFound} ngọc rồng cao cấp!`);
+                    showNotification('Đánh bại Rồng Cổ Đại! 🐉', 'info');
+                } else {
+                    gameState.player.hp = Math.floor(gameState.player.hp * 0.5);
+                    addChatMessage('combat', '💀 Thua rồng! Mất 50% HP');
+                    showNotification('Thua rồng! 💀', 'error');
+                }
+                
+                updateUI();
+            }, 5000);
+        }
+
+        function initializeSkills() {
+            // Initialize player skills with some defaults
+            gameState.player.skills[0] = 'power_slash';
+            gameState.player.skills[1] = 'shield_block';
+            gameState.player.skills[2] = 'heal';
+            gameState.player.skills[3] = 'speed_boost';
+            gameState.player.skills[4] = 'critical_strike';
+            gameState.player.skills[5] = 'reflect_damage';
+            
+            // Setup skill click handlers
+            document.querySelectorAll('.skill-slot').forEach((slot, index) => {
+                slot.addEventListener('click', () => useSkill(index));
+            });
+        }
+
+        function useSkill(slotIndex) {
+            const skillId = gameState.player.skills[slotIndex];
+            if (!skillId) return;
+            
+            const skill = skillDatabase[skillId];
+            if (!skill) return;
+            
+            // Check cooldown
+            const now = Date.now();
+            const cooldownKey = `skill_${slotIndex}`;
+            
+            if (gameState.player.skillCooldowns[cooldownKey] && 
+                gameState.player.skillCooldowns[cooldownKey] > now) {
+                const remaining = Math.ceil((gameState.player.skillCooldowns[cooldownKey] - now) / 1000);
+                showNotification(`${skill.name} còn ${remaining}s cooldown!`, 'warning');
+                return;
+            }
+            
+            // Use skill
+            gameState.player.skillCooldowns[cooldownKey] = now + skill.cooldown;
+            executeSkill(skill);
+            
+            // Show cooldown on UI
+            showSkillCooldown(slotIndex, skill.cooldown);
+            
+            addChatMessage('combat', `✨ Sử dụng ${skill.name}!`);
+        }
+
+        function executeSkill(skill) {
+            switch(skill.effect.type) {
+                case 'damage':
+                    // Enhanced damage for next attack
+                    gameState.player.nextAttackMultiplier = skill.effect.multiplier;
+                    showNotification(`${skill.name} kích hoạt! ⚔️`, 'info');
+                    break;
+                    
+                case 'heal':
+                    const healAmount = Math.floor(gameState.player.maxHp * skill.effect.value);
+                    gameState.player.hp = Math.min(gameState.player.maxHp, gameState.player.hp + healAmount);
+                    showDamageNumber(gameState.player.x, gameState.player.y, healAmount, 'heal');
+                    break;
+                    
+                case 'defense_buff':
+                    // Temporary defense boost
+                    gameState.player.tempDefenseBoost = skill.effect.value;
+                    setTimeout(() => {
+                        gameState.player.tempDefenseBoost = 0;
+                    }, skill.effect.duration);
+                    break;
+                    
+                case 'speed_buff':
+                    // Temporary speed boost
+                    gameState.player.tempSpeedBoost = skill.effect.value;
+                    setTimeout(() => {
+                        gameState.player.tempSpeedBoost = 0;
+                    }, skill.effect.duration);
+                    break;
+                    
+                case 'crit_buff':
+                    // Guaranteed crit next attack
+                    gameState.player.guaranteedCrit = true;
+                    setTimeout(() => {
+                        gameState.player.guaranteedCrit = false;
+                    }, skill.effect.duration);
+                    break;
+                    
+                case 'reflect':
+                    // Reflect damage
+                    gameState.player.reflectDamage = skill.effect.value;
+                    setTimeout(() => {
+                        gameState.player.reflectDamage = 0;
+                    }, skill.effect.duration);
+                    break;
+            }
+            
+            updateUI();
+        }
+
+        function showSkillCooldown(slotIndex, cooldownMs) {
+            const skillSlot = document.querySelector(`[data-skill="${slotIndex}"]`);
+            if (!skillSlot) return;
+            
+            let cooldownElement = skillSlot.querySelector('.skill-cooldown');
+            if (!cooldownElement) {
+                cooldownElement = document.createElement('div');
+                cooldownElement.className = 'skill-cooldown';
+                skillSlot.appendChild(cooldownElement);
+            }
+            
+            let remaining = Math.ceil(cooldownMs / 1000);
+            cooldownElement.textContent = remaining + 's';
+            cooldownElement.style.display = 'flex';
+            
+            const cooldownTimer = setInterval(() => {
+                remaining--;
+                if (remaining <= 0) {
+                    cooldownElement.style.display = 'none';
+                    clearInterval(cooldownTimer);
+                } else {
+                    cooldownElement.textContent = remaining + 's';
+                }
+            }, 1000);
+        }
+
+        function initChatSystem() {
+            // Setup chat tabs
+            document.querySelectorAll('.chat-tab').forEach(tab => {
+                tab.addEventListener('click', () => switchChatTab(tab.dataset.tab));
+            });
+            
+            // Setup chat input
+            const chatInput = document.getElementById('chatInput');
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendChatMessage();
+                }
+            });
+        }
+
+        function switchChatTab(tabName) {
+            document.querySelectorAll('.chat-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            
+            gameState.ui.chatTab = tabName;
+            filterChatMessages();
+        }
+
+        function filterChatMessages() {
+            const chatWindow = document.getElementById('chatWindow');
+            const messages = chatWindow.querySelectorAll('.chat-message');
+            
+            messages.forEach(message => {
+                const messageType = message.classList[1]; // Get second class (type)
+                
+                if (gameState.ui.chatTab === 'all' || messageType === gameState.ui.chatTab) {
+                    message.style.display = 'block';
+                } else {
+                    message.style.display = 'none';
+                }
+            });
+        }
+
+        function sendChatMessage() {
+            const chatInput = document.getElementById('chatInput');
+            const message = chatInput.value.trim();
+            
+            if (!message) return;
+            
+            let messageType = 'world';
+            let displayMessage = message;
+            
+            // Check for clan message
+            if (message.startsWith('/c ')) {
+                messageType = 'clan';
+                displayMessage = `[Clan] ${gameState.player.name}: ${message.substring(3)}`;
+            } else {
+                displayMessage = `[Thế Giới] ${gameState.player.name}: ${message}`;
+            }
+            
+            addChatMessage(messageType, displayMessage);
+            chatInput.value = '';
+            
+            // Simulate other players responding (for demo)
+            if (Math.random() < 0.3) {
+                setTimeout(() => {
+                    const responses = [
+                        'Chào bạn!',
+                        'Ai muốn team không?',
+                        'Bán đồ rẻ!',
+                        'Clan tuyển thành viên!'
+                    ];
+                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                    addChatMessage('world', `[Thế Giới] Player${Math.floor(Math.random() * 100)}: ${randomResponse}`);
+                }, Math.random() * 3000 + 1000);
+            }
+        }
+
+        function addChatMessage(type, message) {
+            const chatWindow = document.getElementById('chatWindow');
+            const messageElement = document.createElement('div');
+            messageElement.className = `chat-message ${type}`;
+            messageElement.textContent = message;
+            
+            chatWindow.appendChild(messageElement);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+            
+            // Keep only last 100 messages
+            while (chatWindow.children.length > 100) {
+                chatWindow.removeChild(chatWindow.firstChild);
+            }
+            
+            // Filter messages based on current tab
+            filterChatMessages();
+        }
+
+        function startRobotFusionCheck() {
+            // Periodically check for robot fusion opportunities
+            setInterval(() => {
+                const nearbyCount = findNearbyPlayersWithSpecialPets().length;
+                const fusionBtn = document.getElementById('robotFusionBtn');
+                
+                if (fusionBtn) {
+                    fusionBtn.textContent = `🤖 Hợp Thể (${nearbyCount}/5)`;
+                    fusionBtn.disabled = nearbyCount < 5;
+                    
+                    if (nearbyCount >= 5) {
+                        fusionBtn.style.background = 'linear-gradient(135deg, #ff6b35, #f7931e)';
+                    } else {
+                        fusionBtn.style.background = '#666';
+                    }
+                }
+            }, 2000);
+        }
+
+        function setupEventListeners() {
+            // Player movement
+            document.addEventListener('keydown', handleKeyDown);
+            document.addEventListener('keyup', handleKeyUp);
+            
+            // Click movement
+            document.getElementById('worldMap').addEventListener('click', handleWorldClick);
+            
+            // Skin selection
+            document.querySelectorAll('.skin-card').forEach(card => {
+                card.addEventListener('click', () => selectSkin(card.dataset.skin));
+            });
+        }
+
+        function selectSkin(skinId) {
+            const skin = itemDatabase[`skin_${skinId}`];
+            if (!skin) return;
+            
+            if (skinId !== 'default' && !gameState.player.ownedSkins.includes(skinId)) {
+                // Try to buy skin
+                if (skin.currency === 'diamond' && gameState.player.diamond >= skin.price) {
+                    gameState.player.diamond -= skin.price;
+                    gameState.player.ownedSkins.push(skinId);
+                    showNotification(`Mua skin ${skin.name} thành công! 👤`, 'info');
+                } else {
+                    showNotification(`Không đủ ${skin.currency === 'diamond' ? 'kim cương' : 'vàng'}!`, 'error');
+                    return;
+                }
+            }
+            
+            // Equip skin
+            gameState.player.currentSkin = skinId;
+            
+            // Update player appearance
+            const player = document.getElementById('player');
+            player.textContent = skin.icon;
+            
+            // Apply skin stats
+            gameState.player.maxHp = 2500 + skin.stats.hp;
+            gameState.player.hp = Math.min(gameState.player.hp + skin.stats.hp, gameState.player.maxHp);
+            gameState.player.attack = gameState.player.baseAttack + skin.stats.attack;
+            gameState.player.speed = gameState.player.baseSpeed + skin.stats.speed;
+            
+            // Update UI
+            document.querySelectorAll('.skin-card').forEach(card => {
+                card.classList.remove('equipped');
+            });
+            document.querySelector(`[data-skin="${skinId}"]`).classList.add('equipped');
+            
+            addChatMessage('system', `👤 Đã trang bị skin: ${skin.name}!`);
+            updateUI();
+        }
+
+        const keys = {};
+
+        function handleKeyDown(e) {
+            keys[e.key.toLowerCase()] = true;
+            
+            // Skill hotkeys (1-9, 0, -, =)
+            const skillKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '='];
+            const keyIndex = skillKeys.indexOf(e.key);
+            if (keyIndex !== -1 && keyIndex < 12) {
+                useSkill(keyIndex);
+            }
+        }
+
+        function handleKeyUp(e) {
+            keys[
